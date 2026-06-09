@@ -1,0 +1,14 @@
+@theme {
+  --color-fb-blue: #1877f2;
+  --color-fb-blue-hover: #166fe5;
+  --color-fb-bg: #f0f2f5;
+  --color-fb-dark: #242526;
+  --color-fb-dark-bg: #18191a;
+  --color-fb-dark-panel: #242526;
+  --color-fb-text-dark: #050505;
+  --color-fb-text-light: #e4e6eb;
+  --color-fb-gray: #65676b;
+  --color-fb-gray-dark: #b0b3b8;
+  --color-fb-gray-bg: #e4e6eb;
+  --color-fb-gray-bg-dark: #3a3b3c;
+}

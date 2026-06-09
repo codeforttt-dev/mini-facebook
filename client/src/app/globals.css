@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@import "./theme.css";
+
+:root {
+  --background: var(--color-fb-bg);
+  --foreground: var(--color-fb-text-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--color-fb-dark-bg);
+    --foreground: var(--color-fb-text-light);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-fb-gray-dark);
+  border-radius: 20px;
+}
