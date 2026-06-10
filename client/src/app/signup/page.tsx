@@ -16,10 +16,36 @@ export default function Signup() {
     gender: "",
   });
 
-  const handleSignup = (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Dummy signup action
-    window.location.href = "/";
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5002/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      // Save token and redirect
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.location.href = "/";
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,17 +63,22 @@ export default function Signup() {
 
         {/* Form */}
         <div className="p-4">
+          {error && <div className="mb-4 p-2 bg-red-100 text-red-600 text-sm rounded border border-red-200">{error}</div>}
           <form onSubmit={handleSignup} className="flex flex-col gap-3">
             <div className="flex gap-3">
               <input 
                 type="text" 
                 placeholder="First name" 
+                value={formData.firstName}
+                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                 className="w-full p-2.5 text-[15px] border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-fb-dark-bg focus:outline-none focus:border-fb-blue text-black dark:text-white"
                 required
               />
               <input 
                 type="text" 
                 placeholder="Last name" 
+                value={formData.lastName}
+                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                 className="w-full p-2.5 text-[15px] border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-fb-dark-bg focus:outline-none focus:border-fb-blue text-black dark:text-white"
                 required
               />
@@ -56,6 +87,8 @@ export default function Signup() {
             <input 
               type="text" 
               placeholder="Mobile number or email address" 
+              value={formData.emailOrPhone}
+              onChange={(e) => setFormData({...formData, emailOrPhone: e.target.value})}
               className="w-full p-2.5 text-[15px] border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-fb-dark-bg focus:outline-none focus:border-fb-blue text-black dark:text-white"
               required
             />
@@ -63,6 +96,8 @@ export default function Signup() {
             <input 
               type="password" 
               placeholder="New password" 
+              value={formData.password}
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
               className="w-full p-2.5 text-[15px] border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-fb-dark-bg focus:outline-none focus:border-fb-blue text-black dark:text-white"
               required
             />
@@ -70,13 +105,13 @@ export default function Signup() {
             <div className="mt-2">
               <span className="text-[12px] text-gray-500 flex items-center gap-1 mb-1">Date of birth <a href="#" className="w-3 h-3 bg-gray-500 text-white rounded-full flex items-center justify-center text-[8px] font-bold">?</a></span>
               <div className="flex gap-3">
-                <select className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-fb-dark-bg text-black dark:text-white">
+                <select value={formData.dobDay} onChange={(e) => setFormData({...formData, dobDay: e.target.value})} className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-fb-dark-bg text-black dark:text-white">
                   <option>1</option><option>2</option><option>3</option>
                 </select>
-                <select className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-fb-dark-bg text-black dark:text-white">
+                <select value={formData.dobMonth} onChange={(e) => setFormData({...formData, dobMonth: e.target.value})} className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-fb-dark-bg text-black dark:text-white">
                   <option>Jan</option><option>Feb</option><option>Mar</option>
                 </select>
-                <select className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-fb-dark-bg text-black dark:text-white">
+                <select value={formData.dobYear} onChange={(e) => setFormData({...formData, dobYear: e.target.value})} className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-fb-dark-bg text-black dark:text-white">
                   <option>2026</option><option>2025</option><option>2024</option>
                 </select>
               </div>
@@ -87,15 +122,15 @@ export default function Signup() {
               <div className="flex gap-3">
                 <label className="flex-1 flex items-center justify-between p-2 border border-gray-300 dark:border-gray-600 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-fb-dark-bg text-black dark:text-white">
                   <span className="text-[15px]">Female</span>
-                  <input type="radio" name="gender" value="female" className="w-4 h-4" />
+                  <input type="radio" name="gender" value="female" onChange={(e) => setFormData({...formData, gender: e.target.value})} className="w-4 h-4" />
                 </label>
                 <label className="flex-1 flex items-center justify-between p-2 border border-gray-300 dark:border-gray-600 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-fb-dark-bg text-black dark:text-white">
                   <span className="text-[15px]">Male</span>
-                  <input type="radio" name="gender" value="male" className="w-4 h-4" />
+                  <input type="radio" name="gender" value="male" onChange={(e) => setFormData({...formData, gender: e.target.value})} className="w-4 h-4" />
                 </label>
                 <label className="flex-1 flex items-center justify-between p-2 border border-gray-300 dark:border-gray-600 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-fb-dark-bg text-black dark:text-white">
                   <span className="text-[15px]">Custom</span>
-                  <input type="radio" name="gender" value="custom" className="w-4 h-4" />
+                  <input type="radio" name="gender" value="custom" onChange={(e) => setFormData({...formData, gender: e.target.value})} className="w-4 h-4" />
                 </label>
               </div>
             </div>
@@ -110,9 +145,10 @@ export default function Signup() {
             <div className="flex justify-center mt-4">
               <button 
                 type="submit"
-                className="bg-[#00a400] hover:bg-[#008a00] text-white font-bold text-[18px] py-1.5 px-12 rounded-lg transition-colors w-[200px]"
+                disabled={loading}
+                className="bg-[#00a400] hover:bg-[#008a00] disabled:bg-[#00a400]/50 text-white font-bold text-[18px] py-1.5 px-12 rounded-lg transition-colors w-[200px]"
               >
-                Sign Up
+                {loading ? "Signing up..." : "Sign Up"}
               </button>
             </div>
           </form>

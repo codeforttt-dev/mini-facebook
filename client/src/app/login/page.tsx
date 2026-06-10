@@ -7,10 +7,36 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Dummy login action
-    window.location.href = "/";
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5002/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emailOrPhone: email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      // Save token and redirect
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.location.href = "/";
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,6 +54,7 @@ export default function Login() {
         {/* Right Side Login Form */}
         <div className="w-full max-w-[400px]">
           <div className="bg-white dark:bg-fb-dark-panel p-4 md:p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800">
+            {error && <div className="mb-4 p-3 bg-red-100 text-red-600 text-sm rounded border border-red-200 text-center">{error}</div>}
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <input 
                 type="text" 
@@ -47,9 +74,10 @@ export default function Login() {
               />
               <button 
                 type="submit"
-                className="w-full bg-fb-blue hover:bg-fb-blue-hover text-white font-bold text-[20px] py-3 rounded-lg transition-colors mt-1"
+                disabled={loading}
+                className="w-full bg-fb-blue hover:bg-fb-blue-hover disabled:bg-fb-blue/50 text-white font-bold text-[20px] py-3 rounded-lg transition-colors mt-1"
               >
-                Log In
+                {loading ? "Logging In..." : "Log In"}
               </button>
             </form>
 
