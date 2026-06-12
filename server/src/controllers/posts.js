@@ -1,0 +1,213 @@
+const Post = require('../models/Post');
+const Friendship = require('../models/Friendship');
+const Notification = require('../models/Notification');
+const Comment = require('../models/Comment');
+
+exports.createPost = async (req, res) => {
+  try {
+    const { content, image } = req.body;
+    const userId = req.user._id;
+
+    if (!content && !image) {
+      return res.status(400).json({ message: 'Post must have text or image' });
+    }
+
+    const newPost = new Post({
+      user: userId,
+      content,
+      image
+    });
+
+    await newPost.save();
+
+    // Fetch user details for notification
+    const user = req.user; // from auth middleware
+    
+    // Find all friends to notify them
+    const friendships = await Friendship.find({
+      $or: [{ requester: userId }, { recipient: userId }],
+      status: 'accepted'
+    }).lean();
+
+    const friendIds = friendships.map(f => 
+      f.requester.toString() === userId.toString() ? f.recipient : f.requester
+    );
+
+    if (friendIds.length > 0) {
+      const notifications = friendIds.map(friendId => ({
+        recipient: friendId,
+        sender: userId,
+        type: 'post',
+        referenceId: newPost._id,
+        message: `${user.firstName} ${user.lastName} just posted: ${content ? content.substring(0, 30) + (content.length > 30 ? '...' : '') : 'A new photo.'}`
+      }));
+      
+      // Bulk insert for high performance scalability
+      await Notification.insertMany(notifications);
+    }
+
+    // Return populated post
+    const populatedPost = await Post.findById(newPost._id).populate('user', 'firstName lastName avatar').lean();
+
+    res.status(201).json({ message: 'Post created', post: populatedPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error creating post' });
+  }
+};
+
+exports.getFeed = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // Get friends
+    const friendships = await Friendship.find({
+      $or: [{ requester: userId }, { recipient: userId }],
+      status: 'accepted'
+    }).lean();
+
+    const friendIds = friendships.map(f => 
+      f.requester.toString() === userId.toString() ? f.recipient : f.requester
+    );
+    
+    // Include user's own posts in the feed
+    friendIds.push(userId);
+
+    const posts = await Post.find({ user: { $in: friendIds } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('user', 'firstName lastName avatar')
+      .lean();
+
+    // Get comments count for each post
+    const postIds = posts.map(p => p._id);
+    const comments = await Comment.aggregate([
+      { $match: { post: { $in: postIds } } },
+      { $group: { _id: '$post', count: { $sum: 1 } } }
+    ]);
+
+    const formattedPosts = posts.map(post => {
+      const commentCount = comments.find(c => c._id.toString() === post._id.toString())?.count || 0;
+      return {
+        ...post,
+        commentsCount: commentCount,
+        hasLiked: post.likes.some(id => id.toString() === userId.toString()),
+        likesCount: post.likes.length
+      };
+    });
+
+    res.status(200).json({ posts: formattedPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error fetching feed' });
+  }
+};
+
+exports.getUserPosts = async (req, res) => {
+  try {
+    const targetUserId = req.params.userId;
+    const currentUserId = req.user._id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const posts = await Post.find({ user: targetUserId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('user', 'firstName lastName avatar')
+      .lean();
+
+    // Get comments count for each post
+    const postIds = posts.map(p => p._id);
+    const comments = await Comment.aggregate([
+      { $match: { post: { $in: postIds } } },
+      { $group: { _id: '$post', count: { $sum: 1 } } }
+    ]);
+
+    const formattedPosts = posts.map(post => {
+      const commentCount = comments.find(c => c._id.toString() === post._id.toString())?.count || 0;
+      return {
+        ...post,
+        commentsCount: commentCount,
+        hasLiked: post.likes.some(id => id.toString() === currentUserId.toString()),
+        likesCount: post.likes.length
+      };
+    });
+
+    res.status(200).json({ posts: formattedPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error fetching user posts' });
+  }
+};
+
+exports.likePost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    const hasLiked = post.likes.includes(userId);
+    if (hasLiked) {
+      post.likes.pull(userId);
+    } else {
+      post.likes.push(userId);
+      
+      // Notify post owner
+      if (post.user.toString() !== userId.toString()) {
+        const notification = new Notification({
+          recipient: post.user,
+          sender: userId,
+          type: 'like',
+          referenceId: post._id,
+          message: `${req.user.firstName} ${req.user.lastName} liked your post.`
+        });
+        await notification.save();
+      }
+    }
+
+    await post.save();
+    res.status(200).json({ message: hasLiked ? 'Unliked' : 'Liked', likesCount: post.likes.length });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error liking post' });
+  }
+};
+
+exports.sharePost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const { recipientId } = req.body;
+    const senderId = req.user._id;
+
+    // Increment share count
+    const post = await Post.findByIdAndUpdate(postId, { $inc: { sharesCount: 1 } }, { returnDocument: 'after' });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    // Send notification if a specific recipient was chosen
+    if (recipientId && recipientId !== senderId.toString()) {
+      const senderUser = await require('../models/User').findById(senderId).lean();
+      
+      const notification = new Notification({
+        recipient: recipientId,
+        sender: senderId,
+        type: 'post',
+        referenceId: post._id,
+        message: `${senderUser.firstName} ${senderUser.lastName} shared a post with you.`
+      });
+      await notification.save();
+    }
+
+    res.status(200).json({ message: 'Shared', sharesCount: post.sharesCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error sharing post' });
+  }
+};

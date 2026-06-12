@@ -42,7 +42,14 @@ exports.signup = async (req, res) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         emailOrPhone: newUser.emailOrPhone,
-        avatar: newUser.avatar
+        avatar: newUser.avatar,
+        bio: newUser.bio,
+        workplace: newUser.workplace,
+        education: newUser.education,
+        location: newUser.location,
+        hometown: newUser.hometown,
+        relationshipStatus: newUser.relationshipStatus,
+        createdAt: newUser.createdAt
       }
     });
 

@@ -12,7 +12,7 @@ exports.updateProfilePicture = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { avatar },
-      { new: true }
+      { returnDocument: 'after' }
     ).select('-password');
 
     res.status(200).json({
@@ -29,5 +29,39 @@ exports.updateProfilePicture = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error updating profile picture' });
+  }
+};
+
+exports.updateProfileDetails = async (req, res) => {
+  try {
+    const { bio, workplace, education, location, hometown, relationshipStatus } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { bio, workplace, education, location, hometown, relationshipStatus },
+      { returnDocument: 'after' }
+    ).select('-password');
+
+    res.status(200).json({
+      message: 'Profile updated successfully',
+      user: {
+        id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        emailOrPhone: updatedUser.emailOrPhone,
+        avatar: updatedUser.avatar,
+        bio: updatedUser.bio,
+        workplace: updatedUser.workplace,
+        education: updatedUser.education,
+        location: updatedUser.location,
+        hometown: updatedUser.hometown,
+        relationshipStatus: updatedUser.relationshipStatus,
+        createdAt: updatedUser.createdAt
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error updating profile details' });
   }
 };
