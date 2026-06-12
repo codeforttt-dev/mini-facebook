@@ -7,12 +7,6 @@
   --foreground: var(--color-fb-text-dark);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--color-fb-dark-bg);
-    --foreground: var(--color-fb-text-light);
-  }
-}
 
 body {
   background: var(--background);
