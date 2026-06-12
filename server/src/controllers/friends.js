@@ -1,5 +1,6 @@
 const Friendship = require('../models/Friendship');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 
 // Send a friend request
 exports.sendRequest = async (req, res) => {
@@ -41,6 +42,14 @@ exports.sendRequest = async (req, res) => {
 
     await newRequest.save();
 
+    // Create notification
+    const senderUser = await User.findById(requesterId).lean();
+    await new Notification({
+      recipient: recipientId,
+      sender: requesterId,
+      message: `${senderUser.firstName} ${senderUser.lastName} sent you a friend request.`
+    }).save();
+
     res.status(200).json({ message: 'Friend request sent successfully' });
   } catch (error) {
     console.error(error);
@@ -57,12 +66,20 @@ exports.acceptRequest = async (req, res) => {
     const request = await Friendship.findOneAndUpdate(
       { requester: requesterId, recipient: recipientId, status: 'pending' },
       { status: 'accepted' },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!request) {
       return res.status(404).json({ message: 'Friend request not found' });
     }
+
+    // Create notification
+    const senderUser = await User.findById(recipientId).lean();
+    await new Notification({
+      recipient: requesterId,
+      sender: recipientId,
+      message: `${senderUser.firstName} ${senderUser.lastName} accepted your friend request.`
+    }).save();
 
     res.status(200).json({ message: 'Friend request accepted' });
   } catch (error) {
@@ -327,6 +344,13 @@ exports.getUserProfile = async (req, res) => {
         lastName: targetUser.lastName,
         name: `${targetUser.firstName} ${targetUser.lastName}`,
         avatar: targetUser.avatar,
+        bio: targetUser.bio,
+        workplace: targetUser.workplace,
+        education: targetUser.education,
+        location: targetUser.location,
+        hometown: targetUser.hometown,
+        relationshipStatus: targetUser.relationshipStatus,
+        createdAt: targetUser.createdAt,
         status
       }
     });

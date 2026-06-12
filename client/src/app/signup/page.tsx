@@ -221,7 +221,7 @@ export default function Signup() {
         <div className="w-full max-w-[480px] relative">
           
           {/* Step 1: Signup Form */}
-          <div className={`w-full transition-transform duration-700 ease-in-out ${step === "form" ? "translate-x-0" : "-translate-x-[150%] absolute top-0"}`}>
+          <div className={`w-full bg-white p-6 md:p-8 rounded-[8px] shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-500 ease-in-out ${step === "form" ? "opacity-100 scale-100 relative z-10" : "opacity-0 scale-95 absolute pointer-events-none"}`}>
             {/* Header */}
             <div className="text-center mb-5 md:mb-3 border-b border-gray-200 pb-3 md:pb-2">
               <h1 className="text-3xl font-bold text-[#1877f2] mb-2 tracking-tight md:hidden">mini-facebook</h1>
@@ -380,7 +380,7 @@ export default function Signup() {
           </div>
 
           {/* Step 2: Upload Profile Picture */}
-          <div className={`w-full bg-white p-6 md:p-8 rounded-[8px] shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] transition-transform duration-700 ease-in-out ${step === "upload" ? "translate-x-0" : "translate-x-[150%] absolute top-0"}`}>
+          <div className={`w-full bg-white p-6 md:p-8 rounded-[8px] shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-500 ease-in-out ${step === "upload" ? "opacity-100 scale-100 relative z-10" : "opacity-0 scale-95 absolute top-0 pointer-events-none"}`}>
             <div className="text-center mb-6">
               <h2 className="text-[26px] font-bold text-[#1c1e21]">Add a Profile Picture</h2>
               <p className="text-[15px] text-[#606770] mt-2">Add a photo so your friends can easily find you.</p>

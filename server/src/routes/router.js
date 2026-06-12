@@ -10,6 +10,7 @@ const friendsController = require('../controllers/friends');
 router.post('/auth/signup', signupController.signup);
 router.post('/auth/login', loginController.login);
 router.put('/auth/profile-picture', authMiddleware, profileController.updateProfilePicture);
+router.put('/auth/profile', authMiddleware, profileController.updateProfileDetails);
 
 // Friends Routes
 router.post('/friends/request/:recipientId', authMiddleware, friendsController.sendRequest);
@@ -22,5 +23,33 @@ router.get('/friends/mutual/:userId', authMiddleware, friendsController.getMutua
 router.get('/friends/requests', authMiddleware, friendsController.getPendingRequests);
 router.get('/users', authMiddleware, friendsController.getAllUsers);
 router.get('/users/:userId', authMiddleware, friendsController.getUserProfile);
+
+const postsController = require('../controllers/posts');
+const commentsController = require('../controllers/comments');
+const notificationsController = require('../controllers/notifications');
+
+// Posts Routes
+router.post('/posts', authMiddleware, postsController.createPost);
+router.get('/posts/feed', authMiddleware, postsController.getFeed);
+router.get('/posts/user/:userId', authMiddleware, postsController.getUserPosts);
+router.put('/posts/:postId/like', authMiddleware, postsController.likePost);
+router.put('/posts/:postId/share', authMiddleware, postsController.sharePost);
+
+// Comments Routes
+router.post('/posts/:postId/comments', authMiddleware, commentsController.createComment);
+router.get('/posts/:postId/comments', authMiddleware, commentsController.getComments);
+
+// Notifications Routes
+router.get('/notifications', authMiddleware, notificationsController.getNotifications);
+router.put('/notifications/read', authMiddleware, notificationsController.markAsRead);
+router.delete('/notifications/clear', authMiddleware, notificationsController.clearNotifications);
+
+// Stories Routes
+const storiesController = require('../controllers/stories');
+router.post('/stories', authMiddleware, storiesController.createStory);
+router.get('/stories/feed', authMiddleware, storiesController.getFeedStories);
+router.put('/stories/:storyId/view', authMiddleware, storiesController.viewStory);
+router.put('/stories/:storyId/like', authMiddleware, storiesController.likeStory);
+router.get('/stories/:storyId/stats', authMiddleware, storiesController.getStoryStats);
 
 module.exports = router;

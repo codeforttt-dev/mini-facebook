@@ -3,13 +3,9 @@ import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
 import RightPanel from "@/components/layout/RightPanel";
 
-export default function FeedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function FeedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-full flex flex-col bg-fb-bg  text-fb-text-dark  pt-[56px]">
+    <div className="min-h-full flex flex-col bg-fb-bg  text-fb-text-dark pt-[104px] md:pt-[56px]">
       <Navbar />
       <div className="flex w-full justify-center">
         <Sidebar />

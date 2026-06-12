@@ -29,7 +29,13 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'
-  }
+  },
+  bio: { type: String, maxlength: 101, default: '' },
+  workplace: { type: String, default: '' },
+  education: { type: String, default: '' },
+  location: { type: String, default: '' },
+  hometown: { type: String, default: '' },
+  relationshipStatus: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

@@ -28,7 +28,14 @@ exports.login = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         emailOrPhone: user.emailOrPhone,
-        avatar: user.avatar
+        avatar: user.avatar,
+        bio: user.bio,
+        workplace: user.workplace,
+        education: user.education,
+        location: user.location,
+        hometown: user.hometown,
+        relationshipStatus: user.relationshipStatus,
+        createdAt: user.createdAt
       }
     });
 

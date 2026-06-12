@@ -39,10 +39,10 @@ export default function Post({ authorName, authorAvatar, timeAgo, content, image
           </div>
         </div>
         <div className="flex items-center gap-2 text-gray-500">
-          <div className="w-8 h-8 rounded-full hover:bg-gray-200 :bg-fb-gray-bg-dark flex items-center justify-center cursor-pointer transition-colors">
+          <div className="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer transition-colors">
             <MoreHorizontal size={20} />
           </div>
-          <div className="w-8 h-8 rounded-full hover:bg-gray-200 :bg-fb-gray-bg-dark flex items-center justify-center cursor-pointer transition-colors hidden sm:flex">
+          <div className="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer transition-colors hidden sm:flex">
             <X size={20} />
           </div>
         </div>
@@ -78,16 +78,16 @@ export default function Post({ authorName, authorAvatar, timeAgo, content, image
       <div className="p-1 px-4 flex justify-between">
         <div 
           onClick={handleLike}
-          className={`flex-1 flex items-center justify-center gap-2 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 :bg-fb-gray-bg-dark ${isLiked ? 'text-fb-blue font-semibold' : 'text-gray-600  font-semibold text-[15px]'}`}
+          className={`flex-1 flex items-center justify-center gap-2 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 ${isLiked ? 'text-fb-blue font-semibold' : 'text-gray-600  font-semibold text-[15px]'}`}
         >
           <ThumbsUp size={20} className={isLiked ? 'fill-current' : ''} />
           <span>Like</span>
         </div>
-        <div className="flex-1 flex items-center justify-center gap-2 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 :bg-fb-gray-bg-dark text-gray-600  font-semibold text-[15px]">
+        <div className="flex-1 flex items-center justify-center gap-2 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 text-gray-600  font-semibold text-[15px]">
           <MessageSquare size={20} />
           <span>Comment</span>
         </div>
-        <div className="flex-1 flex items-center justify-center gap-2 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 :bg-fb-gray-bg-dark text-gray-600  font-semibold text-[15px]">
+        <div className="flex-1 flex items-center justify-center gap-2 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 text-gray-600  font-semibold text-[15px]">
           <Share2 size={20} />
           <span>Share</span>
         </div>
