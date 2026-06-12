@@ -18,7 +18,7 @@ export default function ProfilePage() {
   const avatar = user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=default";
 
   return (
-    <div className="min-h-screen bg-[#f0f2f5] dark:bg-fb-dark-bg text-fb-text-dark dark:text-fb-text-light pt-[56px] pb-10">
+    <div suppressHydrationWarning className="min-h-screen bg-[#f0f2f5] dark:bg-fb-dark-bg text-fb-text-dark dark:text-fb-text-light pt-[56px] pb-10">
       <Navbar />
 
       {/* Header Section (Cover + Avatar + Info) */}
