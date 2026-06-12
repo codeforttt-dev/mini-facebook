@@ -88,10 +88,8 @@ export default function Login() {
             <div className="border-t border-[#dadde1] mx-4 mb-6"></div>
 
             <div className="text-center pb-2">
-              <Link href="/signup">
-                <button className="bg-[#42b72a] hover:bg-[#36a420] text-white font-bold text-[17px] h-[48px] px-4 rounded-[6px] transition-colors inline-block">
-                  Create new account
-                </button>
+              <Link href="/signup" className="bg-[#42b72a] hover:bg-[#36a420] text-white font-bold text-[17px] h-[48px] px-4 rounded-[6px] transition-colors inline-flex items-center justify-center">
+                Create new account
               </Link>
             </div>
           </div>
