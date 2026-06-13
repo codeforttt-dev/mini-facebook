@@ -136,6 +136,8 @@ exports.likeStory = async (req, res) => {
         await new (require('../models/Notification'))({
           recipient: story.user,
           sender: userId,
+          type: 'like',
+          referenceId: story._id,
           message: `${senderUser.firstName} ${senderUser.lastName} liked your story.`
         }).save();
       }
