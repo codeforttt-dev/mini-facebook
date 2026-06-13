@@ -4,8 +4,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const authRoutes = require('./src/routes/router');
+const http = require('http');
+const setupSocket = require('./src/socket');
 
 const app = express();
+const server = http.createServer(app);
+
+// Setup Socket.io
+setupSocket(server);
 
 // Middleware
 app.use(cors());
@@ -25,7 +31,7 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   })

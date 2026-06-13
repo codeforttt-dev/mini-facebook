@@ -52,4 +52,13 @@ router.put('/stories/:storyId/view', authMiddleware, storiesController.viewStory
 router.put('/stories/:storyId/like', authMiddleware, storiesController.likeStory);
 router.get('/stories/:storyId/stats', authMiddleware, storiesController.getStoryStats);
 
+// Chat Routes
+const chatController = require('../controllers/chat');
+router.get('/chat/conversations', authMiddleware, chatController.getConversations);
+router.get('/chat/unread-count', authMiddleware, chatController.getUnreadCount);
+router.get('/chat/messages/:friendId', authMiddleware, chatController.getMessages);
+router.put('/chat/messages/:friendId/seen', authMiddleware, chatController.markAsSeen);
+router.put('/chat/block/:friendId', authMiddleware, chatController.blockUser);
+router.put('/chat/unblock/:friendId', authMiddleware, chatController.unblockUser);
+
 module.exports = router;

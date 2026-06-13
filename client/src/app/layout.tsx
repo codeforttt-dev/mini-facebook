@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SocketProvider } from "@/components/providers/SocketProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col bg-fb-bg text-fb-text-dark">
-        {children}
+        <SocketProvider>
+          {children}
+        </SocketProvider>
       </body>
     </html>
   );
