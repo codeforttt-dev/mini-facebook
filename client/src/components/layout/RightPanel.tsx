@@ -56,8 +56,10 @@ export default function RightPanel() {
                 <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer relative">
                   <div className="relative">
                     <img src={friend.avatar} alt={friend.name} className="w-9 h-9 rounded-full object-cover border border-gray-200" />
-                    {/* Hardcoding active status for UI feel */}
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    {/* Show online status dynamically */}
+                    {friend.isOnline && (
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    )}
                   </div>
                   <span className="font-medium text-[15px] text-gray-900">{friend.name}</span>
                 </div>

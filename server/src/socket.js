@@ -6,6 +6,7 @@ const ModerationLog = require('./models/ModerationLog');
 
 const setupSocket = (server) => {
   const io = new Server(server, {
+    maxHttpBufferSize: 5e7, // 50 MB to allow high quality images
     cors: {
       origin: '*', // Adjust in production
       methods: ['GET', 'POST']

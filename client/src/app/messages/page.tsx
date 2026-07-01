@@ -625,14 +625,20 @@ function ChatContent() {
               <button className="md:hidden p-2 -ml-2 rounded-full hover:bg-gray-100 text-blue-600" onClick={() => { setActiveFriend(null); router.push('/messages'); }}>
                 <ArrowLeft className="w-6 h-6" />
               </button>
-              <div className="relative shrink-0">
+              <div 
+                className="relative shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => router.push(`/profile/${activeFriend._id}`)}
+              >
                 <img src={activeFriend.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'} alt="avatar" className="w-[42px] h-[42px] rounded-full object-cover border border-gray-200" />
                 {activeFriend.isOnline && (
                   <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#31a24c] border-2 border-white rounded-full"></div>
                 )}
               </div>
               <div className="flex flex-col flex-1 min-w-0">
-                <h2 className="font-bold text-[16px] text-black leading-tight truncate">
+                <h2 
+                  className="font-bold text-[16px] text-black leading-tight truncate cursor-pointer hover:underline"
+                  onClick={() => router.push(`/profile/${activeFriend._id}`)}
+                >
                   {activeFriend.firstName} {activeFriend.lastName}
                 </h2>
                 <p className="text-[12px] text-gray-500 truncate">
@@ -664,8 +670,18 @@ function ChatContent() {
             
             {/* Friend intro card */}
             <div className="flex flex-col items-center justify-center py-6 mb-4">
-              <img src={activeFriend.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'} className="w-[80px] h-[80px] rounded-full border-2 border-white shadow-md mb-3" />
-              <h2 className="text-[18px] font-bold text-gray-800">{activeFriend.firstName} {activeFriend.lastName}</h2>
+              <img 
+                src={activeFriend.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'} 
+                className="w-[80px] h-[80px] rounded-full border-2 border-white shadow-md mb-3 cursor-pointer hover:opacity-90 transition-opacity" 
+                onClick={() => router.push(`/profile/${activeFriend._id}`)}
+                alt="avatar"
+              />
+              <h2 
+                className="text-[18px] font-bold text-gray-800 cursor-pointer hover:underline"
+                onClick={() => router.push(`/profile/${activeFriend._id}`)}
+              >
+                {activeFriend.firstName} {activeFriend.lastName}
+              </h2>
               <p className="text-gray-500 text-[13px]">You're friends on Facebook</p>
               <p className="text-gray-400 text-[12px] mt-1">Say hi to start chatting! 👋</p>
             </div>

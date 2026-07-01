@@ -166,7 +166,7 @@ exports.getFriendsList = async (req, res) => {
     const friendships = await Friendship.find({
       $or: [{ requester: targetUserId }, { recipient: targetUserId }],
       status: 'accepted'
-    }).populate('requester recipient', 'firstName lastName avatar emailOrPhone').lean();
+    }).populate('requester recipient', 'firstName lastName avatar emailOrPhone isOnline lastSeen').lean();
 
     const friendsList = friendships.map(f => {
       // Determine which one is the friend
@@ -177,6 +177,8 @@ exports.getFriendsList = async (req, res) => {
         lastName: friend.lastName,
         name: `${friend.firstName} ${friend.lastName}`,
         avatar: friend.avatar,
+        isOnline: friend.isOnline,
+        lastSeen: friend.lastSeen
       };
     });
 
