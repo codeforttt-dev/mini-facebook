@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Search, Home, Users, Bell, MessageCircle, Menu, Grid, PlaySquare } from "lucide-react";
 import Link from "next/link";
 import { useSocket } from '@/components/providers/SocketProvider';
@@ -45,6 +45,12 @@ export default function Navbar() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [friendRequestsCount, setFriendRequestsCount] = useState(0);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const { socket } = useSocket();
   const pathname = usePathname();
 
@@ -151,6 +157,108 @@ export default function Navbar() {
     }
   };
 
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+        const res = await fetch(`http://localhost:5002/api/users?search=${encodeURIComponent(searchQuery)}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setSearchResults(data.users || []);
+        }
+      } catch (error) {
+        console.error("Search error:", error);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+        setIsMobileSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const renderSearchResults = () => (
+    <div className="bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-[420px] overflow-y-auto w-full mt-1">
+      <div className="px-3 py-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-1 flex items-center justify-between">
+        <span>Search Results</span>
+        {searchResults.length > 0 && <span className="text-gray-400 font-normal">{searchResults.length} matches</span>}
+      </div>
+
+      {isSearching ? (
+        <div className="flex items-center justify-center py-8 text-gray-500 text-sm gap-2">
+          <div className="w-5 h-5 border-2 border-[#1877f2] border-t-transparent rounded-full animate-spin"></div>
+          <span>Searching for "{searchQuery}"...</span>
+        </div>
+      ) : searchResults.length === 0 ? (
+        <div className="py-8 text-center px-4">
+          <p className="text-gray-900 font-semibold text-sm">No users found</p>
+          <p className="text-gray-500 text-xs mt-1">We couldn't find anyone matching "{searchQuery}"</p>
+        </div>
+      ) : (
+        searchResults.map((user) => (
+          <Link
+            key={user.id}
+            href={`/profile/${user.id}`}
+            onClick={() => {
+              setIsSearchOpen(false);
+              setIsMobileSearchOpen(false);
+              setSearchQuery("");
+            }}
+            className="flex items-center justify-between px-3 py-2.5 hover:bg-gray-100 transition-colors cursor-pointer group rounded-lg mx-1"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative flex-shrink-0">
+                <img
+                  src={user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'}
+                  alt={user.name}
+                  className="w-10 h-10 rounded-full object-cover border border-gray-200 group-hover:scale-105 transition-transform"
+                />
+                {user.status === "friends" && user.isOnline && (
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-[#1877f2] transition-colors">
+                  {user.name}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {user.status === "friends"
+                    ? (user.isOnline ? "Friend • Active Now" : (user.lastSeen ? `Friend • Active ${formatFacebookTime(user.lastSeen)}` : "Friend"))
+                    : user.status === "request_sent" ? "Request Sent"
+                    : user.status === "request_received" ? "Request Received"
+                    : "Mini-Facebook User"}
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-[#1877f2] bg-[#e7f3ff] px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+              View Profile
+            </span>
+          </Link>
+        ))
+      )}
+    </div>
+  );
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 flex flex-col">
       <div className="h-[56px] px-4 flex items-center justify-between">
@@ -168,13 +276,43 @@ export default function Navbar() {
             </div>
           </Link>
           
-          <div className="hidden md:flex items-center bg-gray-100 rounded-full px-3 py-2 w-64 ml-2">
-            <Search size={18} className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search Mini-Facebook"
-              className="bg-transparent border-none outline-none ml-2 w-full text-sm placeholder-gray-500 text-fb-text-dark "
-            />
+          <div ref={searchRef} className="relative ml-2">
+            <div className="hidden md:flex items-center bg-gray-100 hover:bg-gray-200/80 rounded-full px-3 py-2 w-64 lg:w-80 transition-colors">
+              <Search size={18} className="text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search Mini-Facebook"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsSearchOpen(true);
+                }}
+                onFocus={() => {
+                  if (searchQuery.trim() || searchResults.length > 0) {
+                    setIsSearchOpen(true);
+                  }
+                }}
+                className="bg-transparent border-none outline-none ml-2 w-full text-sm placeholder-gray-500 text-black font-medium"
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSearchResults([]);
+                  }} 
+                  className="text-gray-400 hover:text-gray-600 ml-1"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Desktop Search Results Dropdown */}
+            {isSearchOpen && searchQuery.trim() && (
+              <div className="hidden md:block absolute left-0 top-12 w-[340px] lg:w-[380px]">
+                {renderSearchResults()}
+              </div>
+            )}
           </div>
         </div>
 
@@ -190,7 +328,13 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           {/* Mobile Right Icons */}
           <div className="md:hidden flex items-center gap-2">
-            <div className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer text-black">
+            <div 
+              onClick={() => {
+                setIsMobileSearchOpen(!isMobileSearchOpen);
+                if (!isMobileSearchOpen) setIsSearchOpen(true);
+              }}
+              className="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center cursor-pointer text-black transition-colors"
+            >
               <Search size={20} />
             </div>
             <Link href="/messages" className="relative w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer text-black hover:bg-gray-200">
@@ -263,6 +407,44 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Search Dropdown Bar */}
+      {isMobileSearchOpen && (
+        <div ref={searchRef} className="md:hidden bg-white border-t border-gray-200 p-3 shadow-lg relative z-50 animate-in slide-in-from-top-2">
+          <div className="flex items-center bg-gray-100 rounded-full px-3 py-2 w-full">
+            <Search size={18} className="text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search users by name..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setIsSearchOpen(true);
+              }}
+              autoFocus
+              className="bg-transparent border-none outline-none ml-2 w-full text-sm placeholder-gray-500 text-black font-medium"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => {
+                  setSearchQuery("");
+                  setSearchResults([]);
+                }} 
+                className="text-gray-400 hover:text-gray-600 ml-1"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* Mobile Search Results */}
+          {searchQuery.trim() && (
+            <div className="mt-2">
+              {renderSearchResults()}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Mobile Tab Bar */}
       <div className="md:hidden h-[48px] border-t border-gray-200 flex items-center justify-between px-1 w-full bg-white">
