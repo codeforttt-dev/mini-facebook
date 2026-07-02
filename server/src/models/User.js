@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema({
   relationshipStatus: { type: String, default: '' },
   isOnline: { type: Boolean, default: false },
   lastSeen: { type: Date, default: Date.now },
+  isPublicProfile: { type: Boolean, default: false },
   blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isDeactivated: { type: Boolean, default: false },
   deactivatedUntil: { type: Date }

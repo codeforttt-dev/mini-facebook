@@ -11,6 +11,7 @@ router.post('/auth/signup', signupController.signup);
 router.post('/auth/login', loginController.login);
 router.put('/auth/profile-picture', authMiddleware, profileController.updateProfilePicture);
 router.put('/auth/profile', authMiddleware, profileController.updateProfileDetails);
+router.put('/auth/profile/public-mode', authMiddleware, profileController.togglePublicProfile);
 
 // Friends Routes
 router.post('/friends/request/:recipientId', authMiddleware, friendsController.sendRequest);
@@ -31,9 +32,11 @@ const notificationsController = require('../controllers/notifications');
 // Posts Routes
 router.post('/posts', authMiddleware, postsController.createPost);
 router.get('/posts/feed', authMiddleware, postsController.getFeed);
+router.get('/posts/reels', authMiddleware, postsController.getReels);
 router.get('/posts/user/:userId', authMiddleware, postsController.getUserPosts);
 router.put('/posts/:postId/like', authMiddleware, postsController.likePost);
 router.put('/posts/:postId/share', authMiddleware, postsController.sharePost);
+router.put('/posts/:postId/view', authMiddleware, postsController.viewPost);
 
 // Comments Routes
 router.post('/posts/:postId/comments', authMiddleware, commentsController.createComment);

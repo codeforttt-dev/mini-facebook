@@ -4,6 +4,23 @@ import React, { useState, useEffect } from "react";
 import { Search, MoreHorizontal, Video } from "lucide-react";
 import Link from "next/link";
 
+const formatFacebookTime = (dateString: string) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return `${diffInSeconds || 1}s ago`;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays === 1) return `Yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  if (diffInDays <= 7) return `${diffInDays}d ago`;
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+};
+
 export default function RightPanel() {
   const [friends, setFriends] = useState<any[]>([]);
 
@@ -54,14 +71,21 @@ export default function RightPanel() {
             <li key={friend.id}>
               <Link href={`/messages?userId=${friend.id}`}>
                 <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer relative">
-                  <div className="relative">
+                  <div className="relative flex-shrink-0">
                     <img src={friend.avatar} alt={friend.name} className="w-9 h-9 rounded-full object-cover border border-gray-200" />
                     {/* Show online status dynamically */}
                     {friend.isOnline && (
                       <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                     )}
                   </div>
-                  <span className="font-medium text-[15px] text-gray-900">{friend.name}</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-medium text-[15px] text-gray-900 truncate">{friend.name}</span>
+                    {!friend.isOnline && friend.lastSeen && (
+                      <span className="text-[11px] text-gray-500 truncate">
+                        Active {formatFacebookTime(friend.lastSeen)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </Link>
             </li>
