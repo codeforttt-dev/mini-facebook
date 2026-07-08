@@ -213,7 +213,7 @@ export default function Signup() {
         <div className="hidden md:flex flex-col w-full md:w-1/2 pr-2 text-center md:text-left z-10">
           <h1 className="text-4xl lg:text-5xl font-bold text-[#1877f2] mb-4 tracking-tight">Nestra</h1>
           <p className="text-lg lg:text-2xl text-[#1c1e21] leading-snug">
-            Connect with Birdies and share instant Chirps & Reels on Nestra.
+            A safe, moderated social platform for students (ages 6–16) to connect with Birdies and share clean Chirps & Reels.
           </p>
         </div>
 

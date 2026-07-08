@@ -16,20 +16,25 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nestra — Share Chirps, Reels & Connect with Birdies",
+    default: "Nestra — Connect & Share",
     template: "%s | Nestra"
   },
-  description: "Nestra is the next-generation social platform to share instant Chirps, captivating Reels, stories, and connect with your favorite Birdies across the globe.",
+  description: "Nestra is a safe, moderated social learning & connection platform exclusively for students aged 6 to 16 years. Featuring automated bad-word filtering, clean Chirps, curated Reels, and safe Birdie connections.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
   keywords: [
     "Nestra",
-    "Nestra social",
+    "Nestra safe social network",
+    "kids social platform ages 6 to 16",
+    "student safe social app",
+    "bad word filtered social network",
     "chirps",
     "birdies",
-    "social network",
     "reels",
-    "stories",
-    "social media platform",
-    "connect with birdies"
+    "safe social media for students"
   ],
   authors: [{ name: "Nestra Team" }],
   creator: "Nestra",
@@ -46,8 +51,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Nestra — Share Chirps, Reels & Connect with Birdies",
-    description: "Connect with Birdies, share instant Chirps and Reels on Nestra.",
+    title: "Nestra — Safe Social Platform for Students (Ages 6-16)",
+    description: "A safe, moderated social platform for students aged 6–16 with automated bad-word filtering. Share clean Chirps, watch Reels, and connect with Birdies.",
     url: "https://nestra.app",
     siteName: "Nestra",
     locale: "en_US",
@@ -55,8 +60,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nestra — Share Chirps & Connect with Birdies",
-    description: "Connect with Birdies, share instant Chirps and Reels on Nestra.",
+    title: "Nestra — Safe Social Platform for Students (Ages 6-16)",
+    description: "A safe, moderated social platform for students aged 6–16 with automated bad-word filtering. Share clean Chirps, watch Reels, and connect with Birdies.",
   },
 };
 
@@ -65,12 +70,46 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SocialNetworkingApp",
+    "name": "Nestra",
+    "applicationCategory": "SocialNetworkingApplication",
+    "operatingSystem": "All",
+    "description": "Nestra is a safe, AI-moderated social platform exclusively designed for students and young people aged 6 to 16 years. It features automated bad-word filtering, safe connections with Birdies, and clean short-form Chirps and Reels.",
+    "url": "https://nestra.app",
+    "isFamilyFriendly": true,
+    "audience": {
+      "@type": "PeopleAudience",
+      "suggestedMinAge": "6",
+      "suggestedMaxAge": "16",
+      "audienceType": "Students and Children aged 6 to 16 years"
+    },
+    "featureList": [
+      "Age 6-16 Safe & Moderated Community",
+      "Automated Bad Word & Abusive Language Filtering",
+      "Safe Chirps & Educational Reels",
+      "Connect safely with Birdies"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col bg-fb-bg text-fb-text-dark">
         <AuthGuard>
           <SocketProvider>

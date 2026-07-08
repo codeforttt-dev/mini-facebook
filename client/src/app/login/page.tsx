@@ -46,8 +46,8 @@ export default function Login() {
         {/* Left Side Branding */}
         <div className="flex-1 text-center md:text-left mb-8 md:mb-0 md:pr-8">
           <h1 className="text-5xl md:text-[60px] font-bold text-[#1877f2] mb-4 tracking-tight -ml-2">Nestra</h1>
-          <p className="text-2xl md:text-[28px] text-[#1c1e21] leading-[32px] font-normal w-full md:w-[500px]">
-            Connect with Birdies and share instant Chirps & Reels on Nestra.
+          <p className="text-2xl md:text-[28px] text-[#1c1e21] leading-[34px] font-normal w-full md:w-[500px]">
+            A safe, moderated social platform for students (ages 6–16) to connect with Birdies and share clean Chirps & Reels.
           </p>
         </div>
 
