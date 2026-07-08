@@ -203,7 +203,7 @@ export default function MainFeedPage() {
         </div>
       ) : posts.length === 0 ? (
         <div className="text-center text-gray-500 py-10 bg-white rounded-lg shadow-sm border border-gray-200">
-          No posts to show. Add some friends to see their posts!
+          No chirps to show. Add some Birdies to see their chirps!
         </div>
       ) : (
         <>
@@ -219,7 +219,7 @@ export default function MainFeedPage() {
             <div className="flex justify-center py-6">
               <div className="flex items-center gap-2 text-gray-400">
                 <div className="w-5 h-5 border-2 border-[#1877f2] border-t-transparent rounded-full animate-spin" />
-                <span className="text-sm">Loading more posts...</span>
+                <span className="text-sm">Loading more chirps...</span>
               </div>
             </div>
           )}

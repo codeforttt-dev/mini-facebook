@@ -504,7 +504,7 @@ export default function DynamicProfilePage() {
                     )}
                   </div>
                   <p onClick={() => setActiveTab("Friends")} className="text-[#65676B] font-semibold text-[15px] hover:underline cursor-pointer mt-0.5">
-                    {mutualFriends.length} mutual friends
+                    {mutualFriends.length} mutual Birdies
                   </p>
                   
                   {mutualFriends.length > 0 && (
@@ -571,7 +571,7 @@ export default function DynamicProfilePage() {
                     onClick={() => setActiveTab(tab)}
                     className={`px-4 py-4 font-semibold text-[15px] whitespace-nowrap transition-colors ${activeTab === tab ? 'text-[#1877f2] border-b-[3px] border-[#1877f2]' : 'text-[#65676B] hover:bg-gray-100 rounded-md my-1'}`}
                   >
-                    {tab}
+                    {tab === "Posts" ? "Chirps" : tab === "Friends" ? "Birdies" : tab === "Videos" ? "Reels" : tab}
                   </button>
                 ))}
               </div>

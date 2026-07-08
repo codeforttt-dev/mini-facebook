@@ -250,10 +250,10 @@ export default function Navbar() {
                 </p>
                 <p className="text-xs text-gray-500 truncate">
                   {user.status === "friends"
-                    ? (user.isOnline ? "Friend • Active Now" : (user.lastSeen ? `Friend • Active ${formatFacebookTime(user.lastSeen)}` : "Friend"))
+                    ? (user.isOnline ? "Birdie • Active Now" : (user.lastSeen ? `Birdie • Active ${formatFacebookTime(user.lastSeen)}` : "Birdie"))
                     : user.status === "request_sent" ? "Request Sent"
                     : user.status === "request_received" ? "Request Received"
-                    : "Mini-Facebook User"}
+                    : "Nestra User"}
                 </p>
               </div>
             </div>
@@ -272,14 +272,14 @@ export default function Navbar() {
         {/* Left section: Logo & Search */}
         <div className="flex items-center gap-2">
           {/* Mobile Text Logo */}
-          <Link href="/" onClick={(e) => { if (window.location.pathname === '/') { window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="md:hidden text-[#1877f2] font-bold text-[30px] tracking-tighter">
-            facebook
+          <Link href="/" onClick={(e) => { if (window.location.pathname === '/') { window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="md:hidden text-[#1877f2] font-bold text-[28px] tracking-tight">
+            Nestra
           </Link>
           
-          {/* Desktop 'f' Logo */}
+          {/* Desktop 'N' Logo */}
           <Link href="/" onClick={(e) => { if (window.location.pathname === '/') { window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="hidden md:flex text-fb-blue hover:opacity-90">
-            <div className="w-10 h-10 bg-fb-blue rounded-full flex items-center justify-center text-white font-bold text-2xl pb-1">
-              f
+            <div className="w-10 h-10 bg-[#1877f2] rounded-full flex items-center justify-center text-white font-extrabold text-2xl pb-0.5 shadow-md">
+              N
             </div>
           </Link>
           
@@ -288,7 +288,7 @@ export default function Navbar() {
               <Search size={18} className="text-gray-500" />
               <input
                 type="text"
-                placeholder="Search Mini-Facebook"
+                placeholder="Search Nestra"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);

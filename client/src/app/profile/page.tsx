@@ -246,13 +246,13 @@ export default function ProfilePage() {
         <div className="bg-white rounded-xl shadow-sm p-6 w-full border border-gray-200 animate-in fade-in duration-200 mt-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-200 pb-4 mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Friends</h2>
-              <p className="text-sm text-gray-500 mt-0.5">{friends.length} {friends.length === 1 ? 'friend' : 'friends'} total</p>
+              <h2 className="text-2xl font-bold text-gray-900">Birdies</h2>
+              <p className="text-sm text-gray-500 mt-0.5">{friends.length} {friends.length === 1 ? 'Birdie' : 'Birdies'} total</p>
             </div>
             <div className="relative w-full sm:w-64">
               <input
                 type="text"
-                placeholder="Search Friends..."
+                placeholder="Search Birdies..."
                 value={friendSearchQuery}
                 onChange={(e) => setFriendSearchQuery(e.target.value)}
                 className="w-full pl-3 pr-8 py-2 bg-gray-100 border-none rounded-full text-sm outline-none focus:ring-2 focus:ring-[#1877f2]"
@@ -265,8 +265,8 @@ export default function ProfilePage() {
 
           {filteredFriends.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
-              <p className="text-base font-semibold">No friends found</p>
-              <p className="text-xs mt-1">Add friends or try searching a different name.</p>
+              <p className="text-base font-semibold">No Birdies found</p>
+              <p className="text-xs mt-1">Add Birdies or try searching a different name.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -562,7 +562,7 @@ export default function ProfilePage() {
                     )}
                   </div>
                   <p onClick={() => setActiveTab("Friends")} className="text-[#65676B] font-semibold text-[15px] hover:underline cursor-pointer mt-0.5">
-                    {friends.length} {friends.length === 1 ? 'friend' : 'friends'}
+                    {friends.length} {friends.length === 1 ? 'Birdie' : 'Birdies'}
                   </p>
                   
                   {/* Real friends avatars */}
@@ -609,7 +609,7 @@ export default function ProfilePage() {
                     onClick={() => setActiveTab(tab)}
                     className={`px-4 py-4 font-semibold text-[15px] whitespace-nowrap transition-colors ${activeTab === tab ? 'text-[#1877f2] border-b-[3px] border-[#1877f2]' : 'text-[#65676B] hover:bg-gray-100 rounded-md my-1'}`}
                   >
-                    {tab}
+                    {tab === "Posts" ? "Chirps" : tab === "Friends" ? "Birdies" : tab === "Videos" ? "Reels" : tab}
                   </button>
                 ))}
               </div>

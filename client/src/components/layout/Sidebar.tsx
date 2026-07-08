@@ -25,11 +25,11 @@ export default function Sidebar() {
       title: user?.name || "Yuvraj Singh", 
       href: "/profile" 
     },
-    { icon: <Users className="text-blue-500" size={28} />, title: "Friends", href: "/friends" },
+    { icon: <Users className="text-blue-500" size={28} />, title: "Birdies", href: "/friends" },
     { icon: <Clock className="text-blue-500" size={28} />, title: "Memories", href: "/memories" },
     { icon: <Bookmark className="text-purple-500" size={28} />, title: "Saved", href: "/saved" },
     { icon: <Users2 className="text-blue-500" size={28} />, title: "Groups", href: "/groups" },
-    { icon: <PlaySquare className="text-blue-500" size={28} />, title: "Video", href: "/video" },
+    { icon: <PlaySquare className="text-blue-500" size={28} />, title: "Reels", href: "/video" },
     { icon: <div className="w-8 h-8 rounded-full bg-gray-200  flex items-center justify-center"><ChevronDown size={20} /></div>, title: "See more", href: "#" },
   ];
 
@@ -66,7 +66,7 @@ export default function Sidebar() {
       </div>
       
       <div className="text-xs text-gray-500 mt-4 p-4 pb-10">
-        Privacy · Terms · Advertising · Ad Choices · Cookies · Meta © 2026
+        Privacy · Terms · Advertising · Ad Choices · Cookies · Nestra © 2026
       </div>
     </div>
   );

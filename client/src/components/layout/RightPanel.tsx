@@ -49,7 +49,7 @@ export default function RightPanel() {
   return (
     <div className="hidden lg:block w-[300px] fixed top-[56px] right-0 bottom-0 overflow-y-auto pt-4 px-2">
       <div className="flex items-center justify-between mb-4 px-2">
-        <h3 className="text-gray-500 font-semibold text-[17px]">Contacts</h3>
+        <h3 className="text-gray-500 font-semibold text-[17px]">Birdies (Online)</h3>
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer transition-colors text-gray-500">
             <Video size={18} />
@@ -65,7 +65,7 @@ export default function RightPanel() {
 
       <ul className="space-y-1">
         {friends.length === 0 ? (
-          <p className="text-center text-sm text-gray-500 mt-4 px-4">You have no friends yet. Add some to see them here!</p>
+          <p className="text-center text-sm text-gray-500 mt-4 px-4">You have no Birdies yet. Add some to see them here!</p>
         ) : (
           friends.map((friend) => (
             <li key={friend.id}>

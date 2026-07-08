@@ -15,8 +15,49 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mini-Facebook",
-  description: "A premium mini-facebook clone",
+  title: {
+    default: "Nestra — Share Chirps, Reels & Connect with Birdies",
+    template: "%s | Nestra"
+  },
+  description: "Nestra is the next-generation social platform to share instant Chirps, captivating Reels, stories, and connect with your favorite Birdies across the globe.",
+  keywords: [
+    "Nestra",
+    "Nestra social",
+    "chirps",
+    "birdies",
+    "social network",
+    "reels",
+    "stories",
+    "social media platform",
+    "connect with birdies"
+  ],
+  authors: [{ name: "Nestra Team" }],
+  creator: "Nestra",
+  publisher: "Nestra",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    title: "Nestra — Share Chirps, Reels & Connect with Birdies",
+    description: "Connect with Birdies, share instant Chirps and Reels on Nestra.",
+    url: "https://nestra.app",
+    siteName: "Nestra",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nestra — Share Chirps & Connect with Birdies",
+    description: "Connect with Birdies, share instant Chirps and Reels on Nestra.",
+  },
 };
 
 export default function RootLayout({

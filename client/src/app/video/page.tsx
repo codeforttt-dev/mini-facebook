@@ -13,7 +13,7 @@ function formatReels(rawReels: any[]) {
   return rawReels.map((r: any) => ({
     _id: r._id,
     url: r.video || r.image || "https://www.w3schools.com/html/mov_bbb.mp4",
-    title: r.content || "Facebook Reel 🎬",
+    title: r.content || "Nestra Reel 🎬",
     channel: r.user ? `${r.user.firstName} ${r.user.lastName}` : "@User",
     avatar: r.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${r.user?._id || 'default'}`,
     likes: r.likesCount || 0,
@@ -247,7 +247,7 @@ export default function VideoFeedPage() {
             </div>
             <h2 className="text-xl font-bold text-white">No Reels Yet</h2>
             <p className="text-gray-400 text-sm leading-relaxed">
-              There are currently no Reels uploaded by users. Be the first to share a Reel or Video on Facebook!
+              There are currently no Reels uploaded by users. Be the first to share a Reel or Video on Nestra!
             </p>
             <a 
               href="/" 

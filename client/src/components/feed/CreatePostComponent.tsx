@@ -92,15 +92,15 @@ export default function CreatePostComponent({ currentUser, onPostCreated }: { cu
       {showToast && (
         <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#333] text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-300 z-50">
           <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-          {video ? 'Reel / Video published successfully!' : 'Post published successfully!'}
+          {video ? 'Reel / Video published successfully!' : 'Chirp published successfully!'}
         </div>
       )}
 
       {/* Mode Indicator */}
       {video && (
         <div className="mb-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center justify-between shadow-sm">
-          <span className="flex items-center gap-1.5">🎬 Creating a Facebook Reel / Video Post</span>
-          <span className="bg-black/20 px-2 py-0.5 rounded text-[10px]">Will appear in Friends Feed & Global Reels</span>
+          <span className="flex items-center gap-1.5">🎬 Creating a Nestra Reel / Video Chirp</span>
+          <span className="bg-black/20 px-2 py-0.5 rounded text-[10px]">Will appear in Birdies Feed & Global Reels</span>
         </div>
       )}
 
@@ -109,7 +109,7 @@ export default function CreatePostComponent({ currentUser, onPostCreated }: { cu
         <div className="flex-1 bg-[#f0f2f5] hover:bg-[#e4e6eb] rounded-full px-4 py-2 flex items-center transition-colors">
           <input 
             type="text" 
-            placeholder={currentUser?.firstName ? (video ? `Write a caption for your Reel, ${currentUser.firstName}...` : `What's on your mind, ${currentUser.firstName}?`) : "What's on your mind?"}
+            placeholder={currentUser?.firstName ? (video ? `Write a caption for your Reel, ${currentUser.firstName}...` : `What's chirping in your mind, ${currentUser.firstName}?`) : "What's chirping in your mind?"}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="bg-transparent border-none outline-none w-full text-[17px] text-black"
@@ -177,7 +177,7 @@ export default function CreatePostComponent({ currentUser, onPostCreated }: { cu
           className="w-full bg-[#1877f2] hover:bg-[#166fe5] text-white font-bold py-2 rounded-md mb-3 disabled:opacity-50 transition-colors shadow-sm"
           suppressHydrationWarning
         >
-          {loading ? 'Posting...' : (video ? '🎬 Share Reel / Video' : 'Post')}
+          {loading ? 'Posting...' : (video ? '🎬 Share Reel / Video' : 'Chirp')}
         </button>
       )}
 
