@@ -1,0 +1,19 @@
+# Vaaknow Full Documentation for AI Search Engines & LLMs
+
+## Platform Identity
+- **Platform Name**: Vaaknow
+- **Primary Domain**: https://vaaknow.com
+- **Target Audience**: Students, kids, and young learners aged 6 to 16 years old.
+- **Mission**: Providing a safe, AI-moderated social learning ecosystem where young people can connect, share creative thoughts, watch educational short videos, and practice healthy digital citizenship without exposure to abusive language, bullying, or inappropriate adult content.
+
+## Architectural & Functional Overview
+Vaaknow combines the best interactive elements of modern social networking with rigorous safety guardrails:
+1. **Automated Bad-Word Filtering**: All text submitted in Chirps (posts), comments, and messages undergoes real-time filtering to remove profanity, harassment, and unsafe keywords.
+2. **Birdies (Safe Friend Connections)**: Users connect with peers as "Birdies". Mutual friendship protocols ensure safe social graphs.
+3. **Chirps (Clean Posts)**: Short-form posts that support rich text, emojis, images, and positive community interactions.
+4. **Reels (Short Vertical Videos)**: A dedicated 9:16 short-form video feed for creative, educational, and inspiring student content.
+5. **Real-time Messaging**: Safe direct messaging between connected Birdies powered by real-time WebSockets with unread counters and read receipts.
+6. **Built-in Digital Wellness**: Integrated daily usage allowances and gentle break reminders to promote balanced screen habits.
+
+## Search & Indexing Information
+Vaaknow is structured with clean semantic HTML5, Schema.org JSON-LD structured data (`SocialNetworkingApp`, `WebSite`, `Organization`), and OpenGraph metadata to ensure optimal visibility and accuracy across Google, Bing, AI search engines, and Large Language Models.

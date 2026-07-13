@@ -99,7 +99,7 @@ export default function CreatePostComponent({ currentUser, onPostCreated }: { cu
       {/* Mode Indicator */}
       {video && (
         <div className="mb-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center justify-between shadow-sm">
-          <span className="flex items-center gap-1.5">🎬 Creating a Nestra Reel / Video Chirp</span>
+          <span className="flex items-center gap-1.5">🎬 Creating a Vaaknow Reel / Video Chirp</span>
           <span className="bg-black/20 px-2 py-0.5 rounded text-[10px]">Will appear in Birdies Feed & Global Reels</span>
         </div>
       )}

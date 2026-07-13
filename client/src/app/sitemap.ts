@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://nestra.app';
+  const baseUrl = 'https://vaaknow.com';
 
   return [
     {
@@ -36,6 +36,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/profile`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/messages`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,

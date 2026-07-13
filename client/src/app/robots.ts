@@ -1,18 +1,18 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://nestra.app';
+  const baseUrl = 'https://vaaknow.com';
 
   return {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/video', '/login', '/signup', '/friends', '/profile', '/llms.txt'],
+        allow: ['/', '/video', '/login', '/signup', '/friends', '/profile', '/messages', '/llms.txt'],
         disallow: ['/api/*'],
       },
       {
-        userAgent: ['Googlebot', 'GPTBot', 'PerplexityBot', 'ClaudeBot', 'Google-Extended'],
-        allow: ['/', '/video', '/login', '/signup', '/friends', '/profile', '/llms.txt'],
+        userAgent: ['Googlebot', 'GPTBot', 'PerplexityBot', 'ClaudeBot', 'Google-Extended', 'CCBot', 'Applebot-Extended', 'Amazonbot', 'Omgilibot'],
+        allow: ['/', '/video', '/login', '/signup', '/friends', '/profile', '/messages', '/llms.txt'],
         disallow: ['/api/*'],
       },
     ],

@@ -211,7 +211,7 @@ export default function Signup() {
         
         {/* Left Side: Logo & Text */}
         <div className="hidden md:flex flex-col w-full md:w-1/2 pr-2 text-center md:text-left z-10">
-          <h1 className="text-4xl lg:text-5xl font-bold text-[#1877f2] mb-4 tracking-tight">Nestra</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold text-[#1877f2] mb-4 tracking-tight">Vaaknow</h1>
           <p className="text-lg lg:text-2xl text-[#1c1e21] leading-snug">
             A safe, moderated social platform for students (ages 6–16) to connect with Birdies and share clean Chirps & Reels.
           </p>
@@ -224,7 +224,7 @@ export default function Signup() {
           <div className={`w-full bg-white p-6 md:p-8 rounded-[8px] shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-500 ease-in-out ${step === "form" ? "opacity-100 scale-100 relative z-10" : "opacity-0 scale-95 absolute pointer-events-none"}`}>
             {/* Header */}
             <div className="text-center mb-5 md:mb-3 border-b border-gray-200 pb-3 md:pb-2">
-              <h1 className="text-3xl font-bold text-[#1877f2] mb-2 tracking-tight md:hidden">Nestra</h1>
+              <h1 className="text-3xl font-bold text-[#1877f2] mb-2 tracking-tight md:hidden">Vaaknow</h1>
               <h2 className="text-[24px] font-semibold text-[#1c1e21]">Create a new account</h2>
               <p className="text-[15px] text-[#606770] mt-1 md:mt-0">It's quick and easy.</p>
             </div>

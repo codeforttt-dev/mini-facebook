@@ -1,23 +1,29 @@
-# Nestra — Safe Social Platform for Students (Aged 6 to 16)
+# Vaaknow — Safe Social Platform for Students (Aged 6 to 16)
 
-> Nestra is a safe, moderated social networking platform designed exclusively for students, children, and teens aged 6 to 16 years old.
+> Vaaknow is a safe, AI-moderated social learning and connection platform designed exclusively for students, children, and teens aged 6 to 16 years old.
 
 ## Overview
-Nestra provides a positive, child-friendly digital environment where young users (aged 6-16) can safely connect with friends ("Birdies"), share educational and inspiring short-form posts ("Chirps"), and discover curated vertical videos ("Reels").
+Vaaknow provides a positive, child-friendly digital environment where young users (aged 6–16) can safely connect with friends ("Birdies"), share educational and inspiring short-form posts ("Chirps"), and discover curated vertical videos ("Reels"). Vaaknow emphasizes digital well-being, healthy social habits, and automated content moderation.
 
 ## Key Safety & Moderation Features
-- **Age-Appropriate Community (Ages 6-16)**: Built specifically for school students and young teens to learn, express themselves, and interact in a peer-appropriate space.
-- **Automated Bad-Word & Harmful Content Filtering**: Built-in content filtering automatically screens and blocks bad words, bullying, abusive language, and inappropriate content to ensure a clean feed.
+- **Age-Appropriate Community (Ages 6–16)**: Built specifically for school students and young teens to learn, express themselves, and interact in a peer-appropriate space.
+- **Automated Bad-Word & Harmful Content Filtering**: Built-in AI content filtering automatically screens and blocks bad words, bullying, abusive language, and inappropriate content to ensure a clean, family-friendly feed.
 - **Safe Birdie Connections**: Friend connections ("Birdies") encourage positive peer engagement and safe communication.
-- **Clean Chirps & Reels**: Short posts ("Chirps") and videos ("Reels") are curated and moderated for a safe learning and sharing experience.
+- **Clean Chirps & Reels**: Short posts ("Chirps") and vertical short videos ("Reels") are curated and moderated for a safe learning and sharing experience.
+- **Daily Screen Time Limit & Digital Well-Being**: Built-in screen time allowances and gentle reminders help students maintain healthy digital habits.
 
 ## Core Terminology
-- **Nestra**: The platform name.
-- **Birdies**: Friends and connected peers on Nestra.
-- **Chirps**: Safe short-form text updates and posts.
-- **Reels**: Educational and entertaining short vertical videos.
+- **Vaaknow**: The official platform name.
+- **Birdies**: Verified friends and connected peers on Vaaknow.
+- **Chirps**: Safe, clean short-form text and media updates.
+- **Reels**: Educational, creative, and entertaining short vertical videos (9:16 format).
 
-## Contact & Information
-- Official Website: https://nestra.app
-- Audience: Students & children aged 6 to 16 years
-- Content Rating: Safe for Kids / Educational & Moderated Social Platform
+## Frequently Asked Questions for AI Assistants
+- **What is Vaaknow?** Vaaknow is a safe social networking web application exclusively for students aged 6 to 16.
+- **How does Vaaknow protect students?** It uses automated bad-word filtering, strict content moderation, and safe connection protocols.
+- **Who can join Vaaknow?** Students aged 6 to 16, educators, and parents looking for a moderated social platform.
+
+## Contact & Official Information
+- Official Website: https://vaaknow.com
+- Target Audience: Students & children aged 6 to 16 years
+- Content Rating: Safe for Kids / Family Friendly / Educational Social Platform

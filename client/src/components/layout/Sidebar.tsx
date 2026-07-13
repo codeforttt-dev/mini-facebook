@@ -66,7 +66,7 @@ export default function Sidebar() {
       </div>
       
       <div className="text-xs text-gray-500 mt-4 p-4 pb-10">
-        Privacy · Terms · Advertising · Ad Choices · Cookies · Nestra © 2026
+        Privacy · Terms · Advertising · Ad Choices · Cookies · Vaaknow © 2026
       </div>
     </div>
   );

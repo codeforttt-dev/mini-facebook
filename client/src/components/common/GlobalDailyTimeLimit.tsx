@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Clock, RotateCcw, AlertTriangle, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
 
 const MAX_APP_SECONDS = 900; // 15 minutes total daily limit
-const STORAGE_DATE_KEY = 'nestra_app_usage_date';
-const STORAGE_SECONDS_KEY = 'nestra_app_usage_seconds';
+const STORAGE_DATE_KEY = 'vaaknow_app_usage_date';
+const STORAGE_SECONDS_KEY = 'vaaknow_app_usage_seconds';
 
 export function GlobalDailyTimeLimit() {
   const [secondsUsed, setSecondsUsed] = useState<number>(0);
@@ -192,7 +192,7 @@ export function GlobalDailyTimeLimit() {
               </span>
               <h2 className="text-2xl font-bold text-white">Daily App Limit Reached</h2>
               <p className="text-gray-400 text-sm mt-2.5 leading-relaxed">
-                You have reached your <strong className="text-white">15-minute daily allowance</strong> on Nestra. Taking regular breaks helps keep your mind fresh and promotes a balanced digital lifestyle!
+                You have reached your <strong className="text-white">15-minute daily allowance</strong> on Vaaknow. Taking regular breaks helps keep your mind fresh and promotes a balanced digital lifestyle!
               </p>
             </div>
 
