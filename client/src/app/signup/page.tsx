@@ -370,7 +370,7 @@ export default function Signup() {
                 </div>
                 
                 <div className="text-center mt-3 pt-3 border-t border-gray-200">
-                  <Link href="/login" className="text-[#1877f2] hover:underline text-[15px] font-semibold">
+                  <Link href="/login" title="Log in to Vaaknow" className="text-[#1877f2] hover:underline text-[15px] font-semibold">
                     Already have an account? Log in
                   </Link>
                 </div>

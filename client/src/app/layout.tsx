@@ -16,12 +16,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vaaknow.com"),
+  metadataBase: new URL("https://vaaknow.in"),
   title: {
     default: "Vaaknow — Safe Social Platform for Students (Ages 6-16)",
     template: "%s | Vaaknow"
   },
-  description: "Vaaknow is a safe, AI-moderated social learning & connection platform exclusively for students aged 6 to 16 years. Featuring automated bad-word filtering, clean Chirps, curated Reels, and safe Birdie connections.",
+  description: "Vaaknow is a secure, child-friendly Mini-Facebook application restricted to students aged 6 to 16 years. Powered by an Automated Moderation Engine against adult content & abusive slang, featuring a strict 3-Strike Disciplinary System (24-hour suspension), safe Birdies, clean Chirps, and curated Reels.",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",
@@ -31,21 +31,24 @@ export const metadata: Metadata = {
     "Vaaknow",
     "Vaaknow app",
     "Vaaknow safe social network",
-    "Vaaknow social platform",
-    "kids social platform ages 6 to 16",
+    "safe mini-facebook for kids",
+    "child friendly social network ages 6-16",
+    "automated moderation engine",
+    "3-strike disciplinary system",
+    "24 hour suspension toxic behavior",
+    "bad word filtered student community",
+    "cyberbullying free social media",
     "student safe social app",
-    "bad word filtered social network",
     "chirps",
     "birdies",
     "reels",
-    "safe social media for students",
     "AI moderated student community"
   ],
-  authors: [{ name: "Vaaknow Team", url: "https://vaaknow.com" }],
+  authors: [{ name: "Vaaknow Team", url: "https://vaaknow.in" }],
   creator: "Vaaknow",
   publisher: "Vaaknow",
   alternates: {
-    canonical: "https://vaaknow.com",
+    canonical: "https://vaaknow.in",
   },
   robots: {
     index: true,
@@ -60,8 +63,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Vaaknow — Safe Social Platform for Students (Ages 6-16)",
-    description: "A safe, AI-moderated social platform for students aged 6–16 with automated bad-word filtering. Share clean Chirps, watch Reels, and connect with Birdies.",
-    url: "https://vaaknow.com",
+    description: "A secure, child-friendly Mini-Facebook for students aged 6–16 featuring an Automated Moderation Engine and a 3-Strike Disciplinary System (24-hour ban).",
+    url: "https://vaaknow.in",
     siteName: "Vaaknow",
     locale: "en_US",
     type: "website",
@@ -69,7 +72,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Vaaknow — Safe Social Platform for Students (Ages 6-16)",
-    description: "A safe, AI-moderated social platform for students aged 6–16 with automated bad-word filtering. Share clean Chirps, watch Reels, and connect with Birdies.",
+    description: "A secure, child-friendly Mini-Facebook for students aged 6–16 featuring an Automated Moderation Engine and a 3-Strike Disciplinary System (24-hour ban).",
   },
 };
 
@@ -83,11 +86,11 @@ export default function RootLayout({
       "@context": "https://schema.org",
       "@type": "SocialNetworkingApp",
       "name": "Vaaknow",
-      "alternateName": "Vaaknow Social App",
+      "alternateName": "Vaaknow Safe Mini-Facebook",
       "applicationCategory": "SocialNetworkingApplication",
       "operatingSystem": "All",
-      "description": "Vaaknow is a safe, AI-moderated social platform exclusively designed for students and young people aged 6 to 16 years. It features automated bad-word filtering, safe connections with Birdies, and clean short-form Chirps and Reels.",
-      "url": "https://vaaknow.com",
+      "description": "Vaaknow is a specialized Mini-Facebook application restricted to the target demographic of 6 to 16-year-olds. It features an Automated Moderation Engine filtering adult content, abusive slangs, and spam, backed by a strict 3-Strike Disciplinary System enforcing a 24-hour account suspension.",
+      "url": "https://vaaknow.in",
       "isFamilyFriendly": true,
       "audience": {
         "@type": "PeopleAudience",
@@ -96,10 +99,10 @@ export default function RootLayout({
         "audienceType": "Students and Children aged 6 to 16 years"
       },
       "featureList": [
-        "Age 6-16 Safe & Moderated Community",
-        "Automated Bad Word & Abusive Language Filtering",
-        "Safe Chirps & Educational Reels",
-        "Connect safely with Birdies"
+        "Targeted Demographic: Students Aged 6 to 16 Years",
+        "Real-time Automated Moderation Engine (Adult content, Abusive slangs, Spam filtering)",
+        "The 3-Strike Disciplinary System (24-Hour Account Suspension & Lockout on 3 Violations)",
+        "Safe Birdie Peer Connections & Clean Chirps / Reels"
       ],
       "offers": {
         "@type": "Offer",
@@ -111,10 +114,10 @@ export default function RootLayout({
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Vaaknow",
-      "url": "https://vaaknow.com",
+      "url": "https://vaaknow.in",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://vaaknow.com/?search={search_term_string}",
+        "target": "https://vaaknow.in/?search={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     },
@@ -122,8 +125,8 @@ export default function RootLayout({
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Vaaknow",
-      "url": "https://vaaknow.com",
-      "logo": "https://vaaknow.com/logo.png"
+      "url": "https://vaaknow.in",
+      "logo": "https://vaaknow.in/logo.png"
     },
     {
       "@context": "https://schema.org",
@@ -134,35 +137,35 @@ export default function RootLayout({
           "position": 1,
           "name": "Sign Up for Vaaknow",
           "description": "Create a free student-safe social account on Vaaknow",
-          "url": "https://vaaknow.com/signup"
+          "url": "https://vaaknow.in/signup"
         },
         {
           "@type": "SiteNavigationElement",
           "position": 2,
           "name": "Log In to Vaaknow",
           "description": "Access your safe student community and Birdies on Vaaknow",
-          "url": "https://vaaknow.com/login"
+          "url": "https://vaaknow.in/login"
         },
         {
           "@type": "SiteNavigationElement",
           "position": 3,
           "name": "Watch Vaaknow Reels",
           "description": "Explore safe short vertical videos and educational reels",
-          "url": "https://vaaknow.com/video"
+          "url": "https://vaaknow.in/video"
         },
         {
           "@type": "SiteNavigationElement",
           "position": 4,
           "name": "Birdie Friends",
           "description": "Connect with verified student peers and friends safely",
-          "url": "https://vaaknow.com/friends"
+          "url": "https://vaaknow.in/friends"
         },
         {
           "@type": "SiteNavigationElement",
           "position": 5,
           "name": "Safe Messages",
           "description": "Real-time chat with automated bad-word filtering",
-          "url": "https://vaaknow.com/messages"
+          "url": "https://vaaknow.in/messages"
         }
       ]
     }

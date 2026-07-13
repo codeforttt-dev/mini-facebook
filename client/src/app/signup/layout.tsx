@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign Up for Vaaknow — Safe Social Platform for Students (Ages 6-16)",
-  description: "Create your free Vaaknow account today. Designed specifically for students aged 6 to 16 with automated bad-word filtering, clean Chirps, educational Reels, and safe Birdie connections.",
-  keywords: ["Vaaknow sign up", "Vaaknow register", "student social network signup", "safe kids social platform ages 6-16", "create Vaaknow account", "register Vaaknow"],
+  title: "Sign Up for Vaaknow — Secure Mini-Facebook for Students (Ages 6-16)",
+  description: "Create your free Vaaknow account today. A secure Mini-Facebook alternative designed for students aged 6 to 16, protected by an Automated Moderation Engine and 3-Strike Disciplinary System.",
+  keywords: ["Vaaknow sign up", "Vaaknow register", "secure mini-facebook signup", "safe student social registration", "child friendly social signup"],
   alternates: {
-    canonical: "https://vaaknow.com/signup",
+    canonical: "https://vaaknow.in/signup",
   },
   openGraph: {
-    title: "Sign Up for Vaaknow — Safe Social Platform for Students (Ages 6-16)",
-    description: "Create your Vaaknow account. A safe, moderated community for students aged 6-16 with clean Chirps, Reels, and Birdies.",
-    url: "https://vaaknow.com/signup",
+    title: "Sign Up for Vaaknow — Secure Mini-Facebook for Students (Ages 6-16)",
+    description: "Create your Vaaknow account. A secure, heavily moderated community for students aged 6-16 with clean Chirps, Reels, and Birdies.",
+    url: "https://vaaknow.in/signup",
     siteName: "Vaaknow",
   },
 };
