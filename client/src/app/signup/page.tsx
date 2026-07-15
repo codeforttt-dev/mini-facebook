@@ -134,16 +134,25 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      let response: Response;
+      try {
+        response = await fetch(`${API_URL}/api/auth/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+      } catch {
+        throw new Error("Unable to connect to server. Please check your internet connection.");
+      }
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
+      if (response.status === 400) {
+        throw new Error(data.message || "⚠️ An account already exists with this email or phone.");
+      } else if (response.status === 500) {
+        throw new Error("⚠️ Server error. Please try again later.");
+      } else if (!response.ok) {
+        throw new Error(data.message || "Something went wrong. Please try again.");
       }
 
       localStorage.setItem("token", data.token);

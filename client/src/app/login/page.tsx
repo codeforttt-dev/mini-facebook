@@ -17,16 +17,30 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailOrPhone: email, password }),
-      });
+      let response: Response;
+      try {
+        response = await fetch(`${API_URL}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ emailOrPhone: email, password }),
+        });
+      } catch {
+        // Network error - server not reachable
+        throw new Error("Unable to connect to server. Please check your internet connection and try again.");
+      }
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
+      if (response.status === 400) {
+        // Invalid credentials
+        throw new Error("❌ Incorrect email/phone or password. Please try again.");
+      } else if (response.status === 403) {
+        // Account suspended
+        throw new Error(data.message || "⚠️ Your account has been suspended. Please contact support.");
+      } else if (response.status === 500) {
+        throw new Error("⚠️ Server error. Please try again later.");
+      } else if (!response.ok) {
+        throw new Error(data.message || "Something went wrong. Please try again.");
       }
 
       // Save token and redirect
