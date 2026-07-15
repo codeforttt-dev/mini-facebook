@@ -7,6 +7,7 @@ import PostComponent from "@/components/feed/PostComponent";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_URL } from "@/config/api";
+import toast, { Toaster } from "react-hot-toast";
 
 const formatViewCount = (count: number = 0) => {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace('.0', '')}M`;
@@ -98,6 +99,20 @@ export default function DynamicProfilePage() {
   };
 
   const handleAction = async (endpoint: string, method: string) => {
+    const userName = user?.name || user?.firstName || "User";
+
+    // Optimistic UI — update status immediately
+    setUser((prev: any) => {
+      if (!prev) return prev;
+      let newStatus = prev.status;
+      if (endpoint === 'request') newStatus = 'request_sent';
+      else if (endpoint === 'cancel') newStatus = 'none';
+      else if (endpoint === 'accept') newStatus = 'friends';
+      else if (endpoint === 'reject') newStatus = 'none';
+      else if (endpoint === 'unfriend') newStatus = 'none';
+      return { ...prev, status: newStatus };
+    });
+
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API_URL}/api/friends/${endpoint}/${id}`, {
@@ -105,9 +120,30 @@ export default function DynamicProfilePage() {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
+        if (endpoint === 'request') {
+          toast.success(`Friend request sent to ${userName}! 🎉`, {
+            style: { background: "#1877f2", color: "#fff", fontWeight: "600", borderRadius: "12px", padding: "12px 18px", fontSize: "14px", boxShadow: "0 4px 20px rgba(24,119,242,0.35)" },
+            iconTheme: { primary: "#fff", secondary: "#1877f2" },
+            duration: 3000, position: "bottom-center",
+          });
+        } else if (endpoint === 'accept') {
+          toast.success(`You and ${userName} are now friends! 🎊`, {
+            style: { background: "#42b72a", color: "#fff", fontWeight: "600", borderRadius: "12px", padding: "12px 18px", fontSize: "14px", boxShadow: "0 4px 20px rgba(66,183,42,0.35)" },
+            iconTheme: { primary: "#fff", secondary: "#42b72a" },
+            duration: 3000, position: "bottom-center",
+          });
+        } else if (endpoint === 'cancel') {
+          toast(`Request cancelled`, { icon: "✕", style: { background: "#e4e6eb", color: "#050505", fontWeight: "600", borderRadius: "12px", padding: "12px 18px" }, duration: 2000, position: "bottom-center" });
+        } else if (endpoint === 'unfriend') {
+          toast(`${userName} removed from friends`, { icon: "👋", style: { background: "#e4e6eb", color: "#050505", fontWeight: "600", borderRadius: "12px", padding: "12px 18px" }, duration: 2000, position: "bottom-center" });
+        }
+      } else {
+        // Rollback on failure
         fetchProfile();
+        toast.error("Something went wrong. Try again.", { style: { borderRadius: "12px" } });
       }
     } catch (error) {
+      fetchProfile();
       console.error(error);
     }
   };
@@ -479,6 +515,7 @@ export default function DynamicProfilePage() {
 
   return (
     <div suppressHydrationWarning className="min-h-screen bg-[#f0f2f5] text-fb-text-dark pt-[104px] md:pt-[56px] pb-10">
+      <Toaster />
       <Navbar />
 
       <div className="bg-white shadow-sm w-full">
