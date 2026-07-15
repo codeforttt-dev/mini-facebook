@@ -6,6 +6,7 @@ import { Camera, Plus, PenSquare, ChevronDown, MoreHorizontal, Image as ImageIco
 import EditProfileModal from "@/components/profile/EditProfileModal";
 import CreatePostComponent from "@/components/feed/CreatePostComponent";
 import PostComponent from "@/components/feed/PostComponent";
+import CreateStoryModal from "@/components/feed/CreateStoryModal";
 import Link from "next/link";
 import { API_URL } from "@/config/api";
 
@@ -25,6 +26,7 @@ export default function ProfilePage() {
   // New features state
   const [activeTab, setActiveTab] = useState("Posts");
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [isPublicModalOpen, setIsPublicModalOpen] = useState(false);
   const [friendSearchQuery, setFriendSearchQuery] = useState("");
 
@@ -585,7 +587,10 @@ export default function ProfilePage() {
 
               {/* Action Buttons */}
               <div className="flex items-center gap-2 mb-2 md:mb-4">
-                <button className="bg-[#1877f2] hover:bg-[#166fe5] text-white px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors shadow-sm">
+                <button
+                  onClick={() => setIsStoryModalOpen(true)}
+                  className="bg-[#1877f2] hover:bg-[#166fe5] text-white px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors shadow-sm"
+                >
                   <Plus size={18} />
                   Add to story
                 </button>
@@ -659,6 +664,15 @@ export default function ProfilePage() {
             setUser(updatedUser);
             localStorage.setItem("user", JSON.stringify(updatedUser));
             window.dispatchEvent(new Event("storage"));
+          }}
+        />
+      )}
+
+      {isStoryModalOpen && (
+        <CreateStoryModal
+          onClose={() => setIsStoryModalOpen(false)}
+          onSuccess={() => {
+            setIsStoryModalOpen(false);
           }}
         />
       )}
