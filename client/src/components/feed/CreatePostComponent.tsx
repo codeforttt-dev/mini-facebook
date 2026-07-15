@@ -110,7 +110,7 @@ export default function CreatePostComponent({ currentUser, onPostCreated }: { cu
         <div className="flex-1 bg-[#f0f2f5] hover:bg-[#e4e6eb] rounded-full px-4 py-2 flex items-center transition-colors">
           <input 
             type="text" 
-            placeholder={currentUser?.firstName ? (video ? `Write a caption for your Reel, ${currentUser.firstName}...` : `What's chirping in your mind, ${currentUser.firstName}?`) : "What's chirping in your mind?"}
+            placeholder={currentUser?.firstName ? (video ? `Write a caption for your Reel, ${currentUser.firstName}...` : `What would you like to Vaak ??, ${currentUser.firstName}?`) : "What's chirping in your mind?"}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="bg-transparent border-none outline-none w-full text-[17px] text-black"

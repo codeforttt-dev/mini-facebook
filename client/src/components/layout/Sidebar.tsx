@@ -25,7 +25,7 @@ export default function Sidebar() {
       title: user?.name || "Yuvraj Singh", 
       href: "/profile" 
     },
-    { icon: <Users className="text-blue-500" size={28} />, title: "Birdies", href: "/friends" },
+    { icon: <Users className="text-blue-500" size={28} />, title: "Mitra", href: "/friends" },
     { icon: <Clock className="text-blue-500" size={28} />, title: "Memories", href: "/memories" },
     { icon: <Bookmark className="text-purple-500" size={28} />, title: "Saved", href: "/saved" },
     { icon: <Users2 className="text-blue-500" size={28} />, title: "Groups", href: "/groups" },

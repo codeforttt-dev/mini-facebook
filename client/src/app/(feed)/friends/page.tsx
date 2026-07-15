@@ -114,7 +114,7 @@ export default function FriendsPage() {
             position: "bottom-center",
           });
         } else if (action === "accept") {
-          toast.success(`You and ${userName} are now friends! 🎊`, {
+          toast.success(`You and ${userName} are now Mitra! 🎊`, {
             style: {
               background: "#42b72a",
               color: "#fff",
@@ -129,7 +129,7 @@ export default function FriendsPage() {
             position: "bottom-center",
           });
         } else if (action === "unfriend") {
-          toast(`${userName} removed from friends`, {
+          toast(`${userName} removed from Mitra`, {
             icon: "👋",
             style: {
               background: "#e4e6eb",
@@ -165,7 +165,7 @@ export default function FriendsPage() {
     <div suppressHydrationWarning className="max-w-[1000px] mx-auto w-full pt-6">
       <Toaster />
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-[24px] font-bold text-black">Friends</h1>
+        <h1 className="text-[24px] font-bold text-black">Mitra</h1>
       </div>
 
       <div suppressHydrationWarning className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
@@ -178,7 +178,7 @@ export default function FriendsPage() {
               : "bg-gray-200 text-black hover:bg-gray-300"
           }`}
         >
-          Friend Requests ({requests.length})
+          Mitra Requests ({requests.length})
         </button>
         <button
           suppressHydrationWarning
@@ -200,7 +200,7 @@ export default function FriendsPage() {
               : "bg-gray-200 text-black hover:bg-gray-300"
           }`}
         >
-          All Friends
+          All Mitra
         </button>
       </div>
 
@@ -310,7 +310,7 @@ export default function FriendsPage() {
                             <span className="w-4 h-4 border-2 border-[#1877f2] border-t-transparent rounded-full animate-spin" />
                           ) : (
                             <>
-                              <UserPlus size={18} /> Add Friend
+                              <UserPlus size={18} /> Add Mitra
                             </>
                           )}
                         </button>
@@ -347,7 +347,7 @@ export default function FriendsPage() {
           {activeTab === "friends" &&
             users.filter((u) => u.status === "friends").length === 0 && (
               <div className="col-span-full text-center text-gray-500 py-10">
-                You have no friends yet.
+                You have no Mitra yet.
               </div>
             )}
 
