@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
-import { Camera, Plus, PenSquare, ChevronDown, MoreHorizontal, Image as ImageIcon, MapPin, Briefcase, GraduationCap, Heart, Clock, Video as VideoIcon, Search, MessageCircle } from "lucide-react";
+import { Camera, Plus, PenSquare, ChevronDown, MoreHorizontal, Image as ImageIcon, MapPin, Briefcase, GraduationCap, Heart, Clock, Video as VideoIcon, Search, MessageCircle, Film, Filter, Trash2, Pencil, X, Check } from "lucide-react";
 import EditProfileModal from "@/components/profile/EditProfileModal";
 import CreatePostComponent from "@/components/feed/CreatePostComponent";
 import PostComponent from "@/components/feed/PostComponent";
@@ -29,6 +29,22 @@ export default function ProfilePage() {
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [isPublicModalOpen, setIsPublicModalOpen] = useState(false);
   const [friendSearchQuery, setFriendSearchQuery] = useState("");
+
+  // Manage Posts state
+  const [postFilter, setPostFilter] = useState<'all' | 'post' | 'reel'>('all');
+  const [postSearch, setPostSearch] = useState('');
+  const [showManage, setShowManage] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+
+  // Edit inline state
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState('');
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+
+  // Delete confirm state
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleteStep, setDeleteStep] = useState(1);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -69,6 +85,51 @@ export default function ProfilePage() {
       console.error(error);
     } finally {
       setLoadingPosts(false);
+    }
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    setIsDeleting(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/posts/${postId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setPosts((prev: any[]) => prev.filter((p: any) => p._id !== postId));
+        setDeleteTarget(null);
+        setDeleteStep(1);
+      } else {
+        alert('Failed to delete post.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting post.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleSaveEdit = async (postId: string) => {
+    setIsSavingEdit(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/posts/${postId}/edit`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ content: editContent })
+      });
+      if (res.ok) {
+        setPosts((prev: any[]) => prev.map((p: any) => p._id === postId ? { ...p, content: editContent, editedAt: new Date().toISOString() } : p));
+        setEditingPostId(null);
+      } else {
+        alert('Failed to save.');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -496,36 +557,215 @@ export default function ProfilePage() {
         <div className="w-full lg:w-[60%] flex flex-col gap-4">
           <CreatePostComponent currentUser={user} onPostCreated={() => fetchUserPosts(user.id || user._id)} />
 
-          {/* Posts Filter / Manager */}
-          <div className="bg-white rounded-lg shadow-sm p-4 w-full border border-gray-200 flex justify-between items-center">
-            <h2 className="text-[20px] font-bold text-black">Posts</h2>
-            <div className="flex gap-2">
-              <button className="bg-[#e4e6eb] hover:bg-[#d8dadf] text-black px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors">
-                Filters
-              </button>
-              <button className="bg-[#e4e6eb] hover:bg-[#d8dadf] text-black px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors">
-                Manage posts
+          {/* ── Manage Posts Header ── */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 w-full overflow-hidden">
+            {/* Top bar */}
+            <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-100">
+              <h2 className="text-[20px] font-bold text-black">Posts</h2>
+              <button
+                onClick={() => setShowManage(!showManage)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold text-[14px] transition-all ${showManage ? 'bg-[#1877f2] text-white' : 'bg-[#e4e6eb] hover:bg-[#d8dadf] text-black'}`}
+              >
+                <Filter size={15} />
+                Manage Posts
               </button>
             </div>
+
+            {/* Filter + Search panel */}
+            {showManage && (
+              <div className="px-4 py-3 bg-[#f7f8fa] border-b border-gray-200 flex flex-col gap-3">
+                {/* Filter tabs */}
+                <div className="flex gap-2">
+                  {(['all', 'post', 'reel'] as const).map(f => (
+                    <button
+                      key={f}
+                      onClick={() => setPostFilter(f)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all border ${postFilter === f ? 'bg-[#1877f2] text-white border-[#1877f2]' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-100'}`}
+                    >
+                      {f === 'all' && '🗂️ All'}
+                      {f === 'post' && <><ImageIcon size={13} /> Photos</>}
+                      {f === 'reel' && <><Film size={13} /> Reels / Videos</>}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Search */}
+                <div className="relative">
+                  <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search in posts..."
+                    value={postSearch}
+                    onChange={e => setPostSearch(e.target.value)}
+                    className="w-full bg-white border border-gray-200 rounded-lg pl-9 pr-4 py-2 text-[14px] text-black outline-none focus:ring-2 focus:ring-[#1877f2]/30 transition-all"
+                  />
+                  {postSearch && (
+                    <button onClick={() => setPostSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Stats row */}
+                <div className="flex gap-4 text-[13px] text-gray-500">
+                  <span>📝 {posts.filter(p => !p.video && p.mediaType !== 'reel').length} Posts</span>
+                  <span>🎬 {posts.filter(p => p.video || p.mediaType === 'reel').length} Reels</span>
+                  <span>📅 Total: {posts.length}</span>
+                </div>
+              </div>
+            )}
           </div>
 
+          {/* ── Delete Confirm Modals ── */}
+          {deleteTarget && deleteStep === 1 && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+              <div className="bg-white rounded-2xl shadow-2xl w-[340px] p-6 flex flex-col items-center gap-4 border border-gray-100">
+                <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center">
+                  <Trash2 size={26} className="text-red-500" />
+                </div>
+                <div className="text-center">
+                  <h3 className="text-[17px] font-bold text-gray-900">Delete Post?</h3>
+                  <p className="text-sm text-gray-500 mt-1">Are you sure you want to delete this post?</p>
+                </div>
+                <div className="flex gap-3 w-full">
+                  <button onClick={() => { setDeleteTarget(null); setDeleteStep(1); }} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 text-sm">Cancel</button>
+                  <button onClick={() => setDeleteStep(2)} className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 text-sm">Yes, Delete</button>
+                </div>
+              </div>
+            </div>
+          )}
+          {deleteTarget && deleteStep === 2 && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+              <div className="bg-white rounded-2xl shadow-2xl w-[360px] p-6 flex flex-col items-center gap-4 border border-red-100">
+                <div className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                  <Trash2 size={26} className="text-white" />
+                </div>
+                <div className="text-center">
+                  <h3 className="text-[17px] font-bold text-gray-900">Permanently Delete?</h3>
+                  <p className="text-sm text-gray-500 mt-1">This will be <span className="text-red-500 font-semibold">permanently removed</span> from the database.</p>
+                </div>
+                <div className="flex gap-3 w-full">
+                  <button onClick={() => { setDeleteTarget(null); setDeleteStep(1); }} disabled={isDeleting} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 text-sm disabled:opacity-50">Cancel</button>
+                  <button onClick={() => handleDeletePost(deleteTarget)} disabled={isDeleting} className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 text-sm disabled:opacity-50 flex items-center justify-center gap-2">
+                    {isDeleting ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Trash2 size={15} />}
+                    {isDeleting ? 'Deleting...' : 'Delete Forever'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Posts List ── */}
           {loadingPosts ? (
             <div className="text-center text-gray-500 py-10">Loading posts...</div>
-          ) : posts.length === 0 ? (
-            <div className="text-center text-gray-500 py-10 bg-white rounded-lg shadow-sm border border-gray-200">
-              No posts yet.
-            </div>
-          ) : (
-            posts.map((post) => (
-              <PostComponent
-                key={post._id}
-                post={post}
-                currentUser={user}
-                isProfileView={true}
-                onPostDeleted={(id) => setPosts((prev: any[]) => prev.filter((p: any) => p._id !== id))}
-              />
-            ))
-          )}
+          ) : (() => {
+            const filtered = posts.filter(p => {
+              const matchFilter =
+                postFilter === 'all' ? true :
+                postFilter === 'reel' ? (p.video || p.mediaType === 'reel') :
+                (!p.video && p.mediaType !== 'reel');
+              const matchSearch = !postSearch || (p.content || '').toLowerCase().includes(postSearch.toLowerCase());
+              return matchFilter && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+              return (
+                <div className="text-center text-gray-500 py-10 bg-white rounded-xl shadow-sm border border-gray-200">
+                  {postSearch ? `No posts matching "${postSearch}"` : 'No posts yet.'}
+                </div>
+              );
+            }
+
+            return filtered.map((post) => {
+              const isEditing = editingPostId === post._id;
+              const isReel = post.video || post.mediaType === 'reel';
+
+              return (
+                <div key={post._id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  {/* Post header */}
+                  <div className="flex items-center justify-between px-4 pt-4 pb-2">
+                    <div className="flex items-center gap-3">
+                      <img src={user?.avatar || '/default-avatar.svg'} alt="avatar" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
+                      <div>
+                        <p className="font-semibold text-[14px] text-black">{user?.firstName} {user?.lastName}</p>
+                        <div className="flex items-center gap-2 text-[12px] text-gray-500">
+                          {/* Date */}
+                          <span title={new Date(post.createdAt).toLocaleString()}>
+                            📅 {new Date(post.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            {' '}·{' '}
+                            🕐 {new Date(post.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                          {post.editedAt && <span className="text-blue-400">· Edited</span>}
+                          {/* Type badge */}
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${isReel ? 'bg-purple-100 text-purple-600' : 'bg-green-100 text-green-600'}`}>
+                            {isReel ? '🎬 Reel' : '📷 Post'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-2">
+                      {!isEditing && (
+                        <>
+                          <button
+                            onClick={() => { setEditingPostId(post._id); setEditContent(post.content || ''); }}
+                            title="Edit post"
+                            className="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-[#1877f2] transition-colors"
+                          >
+                            <Pencil size={14} />
+                          </button>
+                          <button
+                            onClick={() => { setDeleteTarget(post._id); setDeleteStep(1); }}
+                            title="Delete post"
+                            className="w-8 h-8 rounded-full bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-colors"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Inline Edit */}
+                  {isEditing ? (
+                    <div className="px-4 pb-4 flex flex-col gap-3">
+                      <textarea
+                        value={editContent}
+                        onChange={e => setEditContent(e.target.value)}
+                        className="w-full min-h-[80px] bg-[#f0f2f5] rounded-xl px-4 py-3 text-[15px] text-black resize-none outline-none focus:ring-2 focus:ring-[#1877f2]/30 transition-all"
+                        placeholder="Edit your post..."
+                        autoFocus
+                      />
+                      {post.image && <img src={post.image} alt="media" className="rounded-lg max-h-[200px] object-contain bg-gray-100" />}
+                      {post.video && <video src={post.video} controls className="rounded-lg max-h-[200px] w-full" />}
+                      <div className="flex gap-2 justify-end">
+                        <button onClick={() => setEditingPostId(null)} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 font-semibold text-[13px] hover:bg-gray-50">Cancel</button>
+                        <button onClick={() => handleSaveEdit(post._id)} disabled={isSavingEdit} className="px-4 py-2 rounded-lg bg-[#1877f2] text-white font-bold text-[13px] hover:bg-[#166fe5] disabled:opacity-50 flex items-center gap-1.5">
+                          {isSavingEdit ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Check size={13} />}
+                          {isSavingEdit ? 'Saving...' : 'Save'}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="px-4 pb-4">
+                      {post.content && <p className="text-[15px] text-black mb-3 whitespace-pre-wrap">{post.content}</p>}
+                      {post.image && <img src={post.image} alt="post media" loading="lazy" className="rounded-lg w-full max-h-[400px] object-contain bg-gray-100" />}
+                      {post.video && <video src={post.video} controls preload="metadata" className="rounded-lg w-full max-h-[400px] object-contain bg-black" />}
+                    </div>
+                  )}
+
+                  {/* Stats bar */}
+                  <div className="flex items-center gap-4 px-4 py-2.5 border-t border-gray-100 text-[12px] text-gray-500 bg-gray-50">
+                    <span>👍 {post.likesCount || 0} likes</span>
+                    <span>💬 {post.commentsCount || 0} comments</span>
+                    <span>🔁 {post.sharesCount || 0} shares</span>
+                    <span className="ml-auto">👁️ {formatViewCount(post.viewsCount || 0)} views</span>
+                  </div>
+                </div>
+              );
+            });
+          })()}
         </div>
       </div>
     );

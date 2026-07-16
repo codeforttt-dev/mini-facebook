@@ -71,7 +71,8 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
   const [editContent, setEditContent] = useState(post.content || '');
   const [isSavingEdit, setIsSavingEdit] = useState(false);
 
-  const isOwner = currentUser && post.user && currentUser._id === post.user._id;
+  const currentUserId = currentUser?._id || currentUser?.id;
+  const isOwner = !!(currentUserId && post.user && (currentUserId === post.user._id || currentUserId === post.user._id?.toString()));
 
   useEffect(() => {
     setPost(initialPost);
