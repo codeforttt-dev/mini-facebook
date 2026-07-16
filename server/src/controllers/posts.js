@@ -335,6 +335,61 @@ exports.getReels = async (req, res) => {
 
 exports.getCachedFriendIds = getCachedFriendIds;
 
+exports.deletePost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    // Only the post owner can delete
+    if (post.user.toString() !== userId.toString()) {
+      return res.status(403).json({ message: 'Not authorized to delete this post' });
+    }
+
+    await Post.findByIdAndDelete(postId);
+
+    // Also delete all comments on this post
+    await Comment.deleteMany({ post: postId });
+
+    // Also delete related notifications
+    await Notification.deleteMany({ referenceId: postId });
+
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error deleting post' });
+  }
+};
+
+exports.editPost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user._id;
+    const { content } = req.body;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    // Only the post owner can edit
+    if (post.user.toString() !== userId.toString()) {
+      return res.status(403).json({ message: 'Not authorized to edit this post' });
+    }
+
+    post.content = content !== undefined ? content : post.content;
+    post.editedAt = new Date();
+    await post.save();
+
+    const updatedPost = await Post.findById(postId).populate('user', 'firstName lastName avatar').lean();
+
+    res.status(200).json({ message: 'Post updated successfully', post: updatedPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error editing post' });
+  }
+};
+
 
 
 

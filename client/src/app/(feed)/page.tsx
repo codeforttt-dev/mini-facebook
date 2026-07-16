@@ -209,7 +209,12 @@ export default function MainFeedPage() {
       ) : (
         <>
           {posts.map((post) => (
-            <PostComponent key={post._id} post={post} currentUser={currentUser} />
+            <PostComponent
+              key={post._id}
+              post={post}
+              currentUser={currentUser}
+              onPostDeleted={(id) => setPosts(prev => prev.filter(p => p._id !== id))}
+            />
           ))}
 
           {/* Infinite scroll sentinel */}

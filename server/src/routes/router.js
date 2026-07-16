@@ -37,6 +37,8 @@ router.get('/posts/user/:userId', authMiddleware, postsController.getUserPosts);
 router.put('/posts/:postId/like', authMiddleware, postsController.likePost);
 router.put('/posts/:postId/share', authMiddleware, postsController.sharePost);
 router.put('/posts/:postId/view', authMiddleware, postsController.viewPost);
+router.put('/posts/:postId/edit', authMiddleware, postsController.editPost);
+router.delete('/posts/:postId', authMiddleware, postsController.deletePost);
 
 // Comments Routes
 router.post('/posts/:postId/comments', authMiddleware, commentsController.createComment);

@@ -37,6 +37,10 @@ const postSchema = new mongoose.Schema({
   sharesCount: {
     type: Number,
     default: 0
+  },
+  editedAt: {
+    type: Date,
+    default: null
   }
 }, { timestamps: true });
 

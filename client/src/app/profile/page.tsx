@@ -517,7 +517,13 @@ export default function ProfilePage() {
             </div>
           ) : (
             posts.map((post) => (
-              <PostComponent key={post._id} post={post} currentUser={user} isProfileView={true} />
+              <PostComponent
+                key={post._id}
+                post={post}
+                currentUser={user}
+                isProfileView={true}
+                onPostDeleted={(id) => setPosts((prev: any[]) => prev.filter((p: any) => p._id !== id))}
+              />
             ))
           )}
         </div>

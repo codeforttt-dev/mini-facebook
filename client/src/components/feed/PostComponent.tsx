@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { MoreHorizontal, ThumbsUp, MessageCircle, Share2, Send } from 'lucide-react';
+import { MoreHorizontal, ThumbsUp, MessageCircle, Share2, Send, Pencil, Trash2, X, Check } from 'lucide-react';
 import ShareModal from './ShareModal';
 import { API_URL } from '@/config/api';
 
@@ -8,6 +8,7 @@ interface PostProps {
   post: any;
   currentUser: any;
   isProfileView?: boolean;
+  onPostDeleted?: (postId: string) => void;
 }
 
 // Helper for dynamic Facebook-like relative time
@@ -48,7 +49,7 @@ const formatViewCount = (count: number = 0) => {
   return `${count}`;
 };
 
-export default function PostComponent({ post: initialPost, currentUser, isProfileView = false }: PostProps) {
+export default function PostComponent({ post: initialPost, currentUser, isProfileView = false, onPostDeleted }: PostProps) {
   const [post, setPost] = useState(initialPost);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState<any[]>([]);
@@ -56,9 +57,36 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
   const [isLiking, setIsLiking] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+  // 3-dot menu
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Delete confirm states
+  const [showDeleteConfirm1, setShowDeleteConfirm1] = useState(false);
+  const [showDeleteConfirm2, setShowDeleteConfirm2] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Edit states
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editContent, setEditContent] = useState(post.content || '');
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+
+  const isOwner = currentUser && post.user && currentUser._id === post.user._id;
+
   useEffect(() => {
     setPost(initialPost);
   }, [initialPost]);
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (isProfileView && post?._id && typeof window !== 'undefined') {
@@ -85,7 +113,6 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
     if (isLiking) return;
     setIsLiking(true);
 
-    // Optimistic UI update
     const wasLiked = post.hasLiked;
     setPost({
       ...post,
@@ -101,7 +128,6 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
       });
     } catch (error) {
       console.error(error);
-      // Revert if failed
       setPost({
         ...post,
         hasLiked: wasLiked,
@@ -171,8 +197,205 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
     }
   };
 
+  // ── DELETE ──────────────────────────────────────────────────
+  const handleDeleteStep1 = () => {
+    setShowMenu(false);
+    setShowDeleteConfirm1(true);
+  };
+
+  const handleDeleteStep2 = () => {
+    setShowDeleteConfirm1(false);
+    setShowDeleteConfirm2(true);
+  };
+
+  const handleDeleteConfirmed = async () => {
+    setIsDeleting(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/posts/${post._id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setShowDeleteConfirm2(false);
+        if (onPostDeleted) onPostDeleted(post._id);
+      } else {
+        alert('Failed to delete post.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error deleting post.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // ── EDIT ────────────────────────────────────────────────────
+  const handleEditOpen = () => {
+    setEditContent(post.content || '');
+    setShowMenu(false);
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editContent.trim() && !post.image && !post.video) return;
+    setIsSavingEdit(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/posts/${post._id}/edit`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: editContent })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPost({ ...post, content: editContent, editedAt: data.post?.editedAt });
+        setShowEditModal(false);
+      } else {
+        alert('Failed to save edit.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error saving edit.');
+    } finally {
+      setIsSavingEdit(false);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-[8px] shadow-[0_1px_2px_rgba(0,0,0,0.2)] p-4 w-full mb-4">
+    <div className="bg-white rounded-[8px] shadow-[0_1px_2px_rgba(0,0,0,0.2)] p-4 w-full mb-4 relative">
+
+      {/* ── DELETE CONFIRM STEP 1 ── */}
+      {showDeleteConfirm1 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-[340px] p-6 flex flex-col items-center gap-4 border border-gray-100">
+            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center">
+              <Trash2 size={26} className="text-red-500" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-[17px] font-bold text-gray-900">Delete Post?</h3>
+              <p className="text-sm text-gray-500 mt-1">Are you sure you want to delete this post?</p>
+            </div>
+            <div className="flex gap-3 w-full mt-1">
+              <button
+                onClick={() => setShowDeleteConfirm1(false)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteStep2}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors text-sm"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── DELETE CONFIRM STEP 2 (Final) ── */}
+      {showDeleteConfirm2 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-[360px] p-6 flex flex-col items-center gap-4 border border-red-100">
+            <div className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+              <Trash2 size={26} className="text-white" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-[17px] font-bold text-gray-900">Permanently Delete?</h3>
+              <p className="text-sm text-gray-500 mt-1">
+                This will be <span className="text-red-500 font-semibold">permanently removed</span> from the database and cannot be recovered.
+              </p>
+            </div>
+            <div className="flex gap-3 w-full mt-1">
+              <button
+                onClick={() => setShowDeleteConfirm2(false)}
+                disabled={isDeleting}
+                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition-colors text-sm disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirmed}
+                disabled={isDeleting}
+                className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition-colors text-sm disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {isDeleting ? (
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Trash2 size={15} />
+                )}
+                {isDeleting ? 'Deleting...' : 'Delete Forever'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── EDIT MODAL ── */}
+      {showEditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-[480px] max-w-[95vw] p-6 flex flex-col gap-4 border border-gray-100">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[17px] font-bold text-gray-900 flex items-center gap-2">
+                <Pencil size={18} className="text-[#1877f2]" />
+                Edit Post
+              </h3>
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Media preview (read-only in edit) */}
+            {post.image && (
+              <div className="rounded-xl overflow-hidden border border-gray-200 max-h-[200px] flex items-center justify-center bg-gray-50">
+                <img src={post.image} alt="Post" className="max-h-[200px] object-contain" />
+              </div>
+            )}
+            {post.video && (
+              <div className="rounded-xl overflow-hidden border border-gray-200 max-h-[200px] flex items-center justify-center bg-black">
+                <video src={post.video} controls className="max-h-[200px] w-full object-contain" />
+              </div>
+            )}
+
+            <textarea
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              className="w-full min-h-[100px] bg-[#f0f2f5] rounded-xl px-4 py-3 text-[15px] text-black resize-none outline-none focus:ring-2 focus:ring-[#1877f2]/30 transition-all"
+              placeholder="What's on your mind?"
+              autoFocus
+            />
+
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="px-5 py-2 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                disabled={isSavingEdit}
+                className="px-5 py-2 rounded-xl bg-[#1877f2] text-white font-bold hover:bg-[#166fe5] transition-colors text-sm disabled:opacity-50 flex items-center gap-2"
+              >
+                {isSavingEdit ? (
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Check size={15} />
+                )}
+                {isSavingEdit ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -185,14 +408,48 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
                 {post.user.firstName} {post.user.lastName}
               </h3>
             </Link>
-            <p className="text-[13px] text-[#65676B]">
+            <p className="text-[13px] text-[#65676B] flex items-center gap-1">
               {formatFacebookTime(post.createdAt)}
+              {post.editedAt && <span className="text-[11px] text-gray-400">&nbsp;· Edited</span>}
             </p>
           </div>
         </div>
-        <button className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors">
-          <MoreHorizontal size={20} />
-        </button>
+
+        {/* 3-dot menu — only if owner */}
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors"
+          >
+            <MoreHorizontal size={20} />
+          </button>
+
+          {showMenu && (
+            <div className="absolute right-0 top-10 w-48 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] border border-gray-100 z-30 overflow-hidden">
+              {isOwner ? (
+                <>
+                  <button
+                    onClick={handleEditOpen}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[14px] text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+                  >
+                    <Pencil size={16} className="text-[#1877f2]" />
+                    Edit Post
+                  </button>
+                  <div className="border-t border-gray-100" />
+                  <button
+                    onClick={handleDeleteStep1}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[14px] text-red-500 hover:bg-red-50 transition-colors font-medium"
+                  >
+                    <Trash2 size={16} />
+                    Delete Post
+                  </button>
+                </>
+              ) : (
+                <div className="px-4 py-3 text-[13px] text-gray-400 text-center">No options available</div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Content */}
