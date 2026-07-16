@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
-import { Camera, Plus, PenSquare, ChevronDown, MoreHorizontal, Image as ImageIcon, MapPin, Briefcase, GraduationCap, Heart, Clock, Video as VideoIcon, Search, MessageCircle, Film, Filter, Trash2, Pencil, X, Check } from "lucide-react";
+import { Camera, Plus, PenSquare, ChevronDown, MoreHorizontal, Image as ImageIcon, MapPin, Briefcase, GraduationCap, Heart, Clock, Video as VideoIcon, Search, MessageCircle, Film, Filter, Trash2, Pencil, X, Check, LogOut } from "lucide-react";
 import EditProfileModal from "@/components/profile/EditProfileModal";
 import CreatePostComponent from "@/components/feed/CreatePostComponent";
 import PostComponent from "@/components/feed/PostComponent";
 import CreateStoryModal from "@/components/feed/CreateStoryModal";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { API_URL } from "@/config/api";
 
 const formatViewCount = (count: number = 0) => {
@@ -45,6 +46,17 @@ export default function ProfilePage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [deleteStep, setDeleteStep] = useState(1);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Logout state
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.dispatchEvent(new Event('storage'));
+    router.push('/auth');
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -775,6 +787,38 @@ export default function ProfilePage() {
     <div suppressHydrationWarning className="min-h-screen bg-[#f0f2f5] text-fb-text-dark pt-[104px] md:pt-[56px] pb-10">
       <Navbar />
 
+      {/* Logout Confirm Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-[320px] p-6 flex flex-col items-center gap-4 border border-gray-100">
+            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center">
+              <LogOut size={26} className="text-red-500" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-[17px] font-bold text-gray-900">Log Out?</h3>
+              <p className="text-sm text-gray-500 mt-1">
+                Kya aap <span className="font-semibold text-gray-700">{user?.firstName} {user?.lastName}</span> ke account se logout karna chahte hain?
+              </p>
+            </div>
+            <div className="flex gap-3 w-full mt-1">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition-colors text-sm flex items-center justify-center gap-2"
+              >
+                <LogOut size={15} />
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header Section (Cover + Avatar + Info) */}
       <div className="bg-white shadow-sm w-full">
         <div className="max-w-[1095px] mx-auto w-full">
@@ -832,7 +876,7 @@ export default function ProfilePage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-2 mb-2 md:mb-4">
+              <div className="flex items-center gap-2 mb-2 md:mb-4 flex-wrap">
                 <button
                   onClick={() => setIsStoryModalOpen(true)}
                   className="bg-[#1877f2] hover:bg-[#166fe5] text-white px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors shadow-sm"
@@ -843,6 +887,13 @@ export default function ProfilePage() {
                 <button onClick={() => setIsEditModalOpen(true)} className="bg-[#e4e6eb] hover:bg-[#d8dadf] text-black px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors">
                   <PenSquare size={18} />
                   Edit profile
+                </button>
+                <button
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="bg-red-50 hover:bg-red-100 text-red-500 px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors border border-red-200"
+                >
+                  <LogOut size={18} />
+                  Log Out
                 </button>
                 <button className="bg-[#e4e6eb] hover:bg-[#d8dadf] text-black px-3 py-1.5 rounded-md flex items-center transition-colors">
                   <ChevronDown size={18} />
