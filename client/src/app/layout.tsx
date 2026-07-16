@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   description:
     "Vaaknow is a safe, moderated social platform built exclusively for students aged 6–16. Share Chirps, watch Reels, connect with Birdies, and enjoy a cyberbullying-free community powered by an Automated Moderation Engine and 3-Strike Disciplinary System.",
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: "/cropped-icon.png",
+    shortcut: "/cropped-icon.png",
+    apple: "/vaaknowlogo.png",
   },
   keywords: [
     // Brand-exact (highest priority — triggers branded search)
@@ -98,7 +98,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://vaaknow.com/logo.png",
+        url: "https://vaaknow.com/vaaknowlogo.png",
         width: 1200,
         height: 630,
         alt: "Vaaknow — Safe Social Platform for Students",
@@ -107,10 +107,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vaaknow — Safe Social Platform for Students (Ages 6-16)",
-    description:
-      "Vaaknow: The safe, moderated social network for students aged 6–16. Chirps, Reels, Birdies — cyberbullying-free.",
-    images: ["https://vaaknow.com/logo.png"],
+    title: "Vaaknow - Connect, Share, and Learn",
+    description: "A safe, moderated social platform for students to connect and share.",
+    images: ["https://vaaknow.com/vaaknowlogo.png"],
   },
   verification: {
     // Add your Google Search Console verification code here when you get it
@@ -169,12 +168,12 @@ export default function RootLayout({
       "url": "https://vaaknow.com",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://vaaknow.com/logo.png",
-        "width": 512,
-        "height": 512
+        "url": "https://vaaknow.com/vaaknowlogo.png",
+        "width": 600,
+        "height": 60
       },
-      "image": "https://vaaknow.com/logo.png",
-      "description": "Vaaknow is a safe, child-friendly social networking platform exclusively for students aged 6 to 16 years.",
+      "image": "https://vaaknow.com/vaaknowlogo.png",
+      "description": "A safe, moderated social platform for students to connect and share.",
       "foundingDate": "2024",
       "slogan": "Safe Social for Students",
       "knowsAbout": [

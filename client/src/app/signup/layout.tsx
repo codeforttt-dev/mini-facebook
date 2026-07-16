@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Vaaknow",
     images: [
       {
-        url: "https://vaaknow.com/logo.png",
+        url: "https://vaaknow.com/vaaknowlogo.png",
         width: 1200,
         height: 630,
         alt: "Vaaknow Sign Up — Safe Social Platform for Students",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Sign Up for Vaaknow — Safe Student Social Platform",
     description:
       "Create your free Vaaknow account — the safe, moderated social network for students aged 6–16.",
-    images: ["https://vaaknow.com/logo.png"],
+    images: ["https://vaaknow.com/vaaknowlogo.png"],
   },
 };
 

@@ -18,7 +18,7 @@ export default function robots(): MetadataRoute.Robots {
           '/messages',
           '/sitemap.xml',
           '/llms.txt',
-          '/logo.png',
+          '/vaaknowlogo.png',
         ],
         disallow: [
           '/api/',
@@ -39,7 +39,7 @@ export default function robots(): MetadataRoute.Robots {
           '/messages',
           '/sitemap.xml',
           '/llms.txt',
-          '/logo.png',
+          '/vaaknowlogo.png',
         ],
         disallow: ['/api/', '/_next/'],
         crawlDelay: 0,
@@ -47,7 +47,7 @@ export default function robots(): MetadataRoute.Robots {
       // Google Images
       {
         userAgent: 'Googlebot-Image',
-        allow: ['/logo.png', '/'],
+        allow: ['/vaaknowlogo.png', '/'],
       },
       // Bing
       {

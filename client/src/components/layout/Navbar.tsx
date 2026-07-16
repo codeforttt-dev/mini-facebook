@@ -273,15 +273,13 @@ export default function Navbar() {
         {/* Left section: Logo & Search */}
         <div className="flex items-center gap-2">
           {/* Mobile Text Logo */}
-          <Link href="/" onClick={(e) => { if (window.location.pathname === '/') { window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="md:hidden text-[#1877f2] font-bold text-[28px] tracking-tight">
-            Vaaknow
+          <Link href="/" onClick={(e) => { if (window.location.pathname === '/') { window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="md:hidden flex items-center -ml-3 translate-y-1">
+            <img src="/vaaknowlogo.png" alt="Vaaknow Logo" className="h-[55px] w-auto object-contain scale-125 origin-left" />
           </Link>
           
-          {/* Desktop 'V' Logo */}
-          <Link href="/" onClick={(e) => { if (window.location.pathname === '/') { window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="hidden md:flex text-fb-blue hover:opacity-90">
-            <div className="w-10 h-10 bg-[#1877f2] rounded-full flex items-center justify-center text-white font-extrabold text-2xl pb-0.5 shadow-md">
-              V
-            </div>
+          {/* Desktop Logo */}
+          <Link href="/" onClick={(e) => { if (window.location.pathname === '/') { window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="hidden md:flex hover:opacity-90 items-center -ml-3 translate-y-2">
+            <img src="/vaaknowlogo.png" alt="Vaaknow Logo" className="h-[65px] w-auto object-contain scale-[1.6] origin-left" />
           </Link>
           
           <div ref={searchRef} className="relative ml-2">

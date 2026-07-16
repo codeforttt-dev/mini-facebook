@@ -59,8 +59,8 @@ export default function Login() {
       <div className="max-w-[980px] w-full flex flex-col md:flex-row items-center justify-between gap-10 pb-20">
 
         {/* Left Side Branding */}
-        <div className="flex-1 text-center md:text-left mb-8 md:mb-0 md:pr-8">
-          <h1 className="text-5xl md:text-[60px] font-bold text-[#1877f2] mb-4 tracking-tight -ml-2">Vaaknow</h1>
+        <div className="flex-1 text-center md:text-left mb-8 md:mb-0 md:pr-8 flex flex-col items-center md:items-start">
+          <img src="/vaaknowlogo.png" alt="Vaaknow Logo" className="h-16 md:h-20 w-auto object-contain mb-4 -ml-2" />
           <p className="text-2xl md:text-[28px] text-[#1c1e21] leading-[34px] font-normal w-full md:w-[500px]">
             A safe, moderated social platform for students (ages 6–16) to connect with Birdies and share clean Chirps &amp; Reels.
           </p>
