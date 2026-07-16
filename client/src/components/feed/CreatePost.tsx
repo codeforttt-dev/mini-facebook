@@ -7,7 +7,7 @@ export default function CreatePost() {
       {/* Top section */}
       <div className="p-3 md:p-4 flex gap-2">
         <img
-          src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+          src="/default-avatar.svg"
           alt="User"
           className="w-10 h-10 rounded-full cursor-pointer"
         />

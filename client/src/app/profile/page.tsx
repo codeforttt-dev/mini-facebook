@@ -127,7 +127,7 @@ export default function ProfilePage() {
   };
 
   const fullName = user ? `${user.firstName} ${user.lastName}` : "Loading...";
-  const avatar = user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=default";
+  const avatar = user?.avatar || "/default-avatar.svg";
 
   const renderTabContent = () => {
     if (activeTab === "About") {

@@ -12,16 +12,22 @@ export default function Sidebar() {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const u = JSON.parse(storedUser);
+      let avatar = u.avatar;
+      if (avatar && avatar.includes('dicebear.com')) {
+        avatar = '/default-avatar.svg';
+        u.avatar = avatar;
+        localStorage.setItem("user", JSON.stringify(u)); // Auto-fix it in local storage
+      }
       setUser({
         name: `${u.firstName} ${u.lastName}`,
-        avatar: u.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"
+        avatar: avatar || "/default-avatar.svg"
       });
     }
   }, []);
 
   const sidebarLinks = [
     { 
-      icon: <img src={user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} className="w-8 h-8 rounded-full object-cover" alt="User" />, 
+      icon: <img src={user?.avatar || "/default-avatar.svg"} className="w-8 h-8 rounded-full object-cover" alt="User" />, 
       title: user?.name || "Yuvraj Singh", 
       href: "/profile" 
     },

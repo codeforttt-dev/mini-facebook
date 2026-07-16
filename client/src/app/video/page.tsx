@@ -16,7 +16,7 @@ function formatReels(rawReels: any[]) {
     url: r.video || r.image || "https://www.w3schools.com/html/mov_bbb.mp4",
     title: r.content || "Vaaknow Reel 🎬",
     channel: r.user ? `${r.user.firstName} ${r.user.lastName}` : "@User",
-    avatar: r.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${r.user?._id || 'default'}`,
+    avatar: r.user?.avatar || `/default-avatar.svg.user?._id || 'default'}`,
     likes: r.likesCount || 0,
     hasLiked: r.hasLiked || false,
     comments: r.commentsCount || 0,
@@ -315,7 +315,7 @@ export default function VideoFeedPage() {
                 <div className="flex items-center gap-2.5 mb-1.5 w-full">
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-white/80 flex-shrink-0 shadow-md bg-gray-800">
                     <img 
-                      src={reel.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${reel.channel}`} 
+                      src={reel.avatar || `/default-avatar.svg.channel}`} 
                       alt="avatar" 
                       className="w-full h-full object-cover" 
                     />
@@ -381,7 +381,7 @@ export default function VideoFeedPage() {
 
                 {/* Rotating Audio Disc */}
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-md overflow-hidden border-2 border-white/80 mt-1 animate-[spin_5s_linear_infinite] shadow-[0_0_15px_rgba(0,0,0,0.8)] flex-shrink-0">
-                  <img src={`https://api.dicebear.com/7.x/identicon/svg?seed=${reel.channel}`} alt="audio" className="w-full h-full object-cover scale-150" />
+                  <img src={`/default-avatar.svg.channel}`} alt="audio" className="w-full h-full object-cover scale-150" />
                 </div>
               </div>
 
@@ -426,7 +426,7 @@ export default function VideoFeedPage() {
                 commentsList.map((c: any, i: number) => (
                   <div key={c._id || i} className="flex gap-2.5 items-start">
                     <img 
-                      src={c.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${c.user?._id || i}`} 
+                      src={c.user?.avatar || `/default-avatar.svg.user?._id || i}`} 
                       alt="" 
                       className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-gray-700 mt-0.5" 
                     />

@@ -151,7 +151,7 @@ export default function DynamicProfilePage() {
   if (!user) return <div className="min-h-screen bg-[#f0f2f5] pt-[56px] flex justify-center items-center"><div className="text-xl font-bold text-gray-500">User not found.</div></div>;
 
   const fullName = user.name;
-  const avatar = user.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=default";
+  const avatar = user.avatar || "/default-avatar.svg";
 
   const renderTabContent = () => {
     if (activeTab === "About") {
@@ -592,7 +592,7 @@ export default function DynamicProfilePage() {
                   </button>
                 )}
                 <button onClick={() => router.push(`/messages?userId=${id}`)} className="bg-[#e4e6eb] hover:bg-[#d8dadf] text-black px-3 py-1.5 rounded-md font-semibold text-[15px] flex items-center gap-1.5 transition-colors">
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=messenger" className="w-5 h-5" alt="msg" />
+                  <img src="/default-avatar.svg" className="w-5 h-5" alt="msg" />
                   Message
                 </button>
               </div>

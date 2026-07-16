@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
   gender: { type: String },
   avatar: {
     type: String,
-    default: 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'
+    default: '/default-avatar.svg'
   },
   bio: { type: String, maxlength: 101, default: '' },
   workplace: { type: String, default: '' },

@@ -40,7 +40,7 @@ const formatFacebookTime = (dateString: string) => {
 };
 
 export default function Navbar() {
-  const [avatar, setAvatar] = useState("https://api.dicebear.com/7.x/avataaars/svg?seed=Felix");
+  const [avatar, setAvatar] = useState("/default-avatar.svg");
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -59,7 +59,13 @@ export default function Navbar() {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      if (user.avatar) setAvatar(user.avatar);
+      let newAvatar = user.avatar;
+      if (newAvatar && newAvatar.includes('dicebear.com')) {
+        newAvatar = '/default-avatar.svg';
+        user.avatar = newAvatar;
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+      if (newAvatar) setAvatar(newAvatar);
       // Delay non-critical navbar API calls — run AFTER feed & stories finish
       // Run sequentially so they don't compete with each other
       const timer = setTimeout(async () => {
@@ -237,7 +243,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3 min-w-0">
               <div className="relative flex-shrink-0">
                 <img
-                  src={user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'}
+                  src={user.avatar || '/default-avatar.svg'}
                   alt={user.name}
                   className="w-10 h-10 rounded-full object-cover border border-gray-200 group-hover:scale-105 transition-transform"
                 />

@@ -109,7 +109,7 @@ export default function EditProfileModal({ user, onClose, onSave }: EditProfileM
               <div className="flex justify-center">
                 <div className="relative group cursor-pointer">
                   <div className="w-[168px] h-[168px] rounded-full overflow-hidden border-4 border-white shadow-sm ring-1 ring-gray-200">
-                    <img src={profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"} alt="Profile" className="w-full h-full object-cover" />
+                    <img src={profileImage || "/default-avatar.svg"} alt="Profile" className="w-full h-full object-cover" />
                   </div>
                   <label className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                     <Camera size={28} className="text-white mb-1" />

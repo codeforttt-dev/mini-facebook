@@ -106,7 +106,7 @@ export default function CreatePostComponent({ currentUser, onPostCreated }: { cu
       )}
 
       <div className="flex gap-2 mb-3">
-        <img src={currentUser?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'} alt="User" className="w-10 h-10 rounded-full object-cover" />
+        <img src={currentUser?.avatar || '/default-avatar.svg'} alt="User" className="w-10 h-10 rounded-full object-cover" />
         <div className="flex-1 bg-[#f0f2f5] hover:bg-[#e4e6eb] rounded-full px-4 py-2 flex items-center transition-colors">
           <input 
             type="text" 
