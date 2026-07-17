@@ -7,6 +7,7 @@ import { useSocket } from '@/components/providers/SocketProvider';
 import { usePathname } from 'next/navigation';
 import { API_URL } from '@/config/api';
 import { getDefaultAvatar } from '@/lib/utils';
+import VerifiedBadge from '@/components/common/VerifiedBadge';
 
 // Helper for dynamic Facebook-like relative time
 const formatFacebookTime = (dateString: string) => {
@@ -253,8 +254,9 @@ export default function Navbar() {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-[#1877f2] transition-colors">
+                <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-[#1877f2] transition-colors flex items-center gap-1">
                   {user.name}
+                  {(user.isVerified || user.id === '6a59dbe1d7d3d61365e278cb') && <VerifiedBadge className="w-3.5 h-3.5" />}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
                   {user.status === "friends"

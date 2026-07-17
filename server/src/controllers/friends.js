@@ -313,7 +313,7 @@ exports.getAllUsers = async (req, res) => {
 
     // Get all users except current user (limited to 20 if searching, else 100)
     const users = await User.find(query)
-      .select('firstName lastName avatar isOnline lastSeen isPublicProfile gender')
+      .select('firstName lastName avatar isOnline lastSeen isPublicProfile gender isVerified')
       .limit(search ? 20 : 100)
       .lean();
 
@@ -345,6 +345,7 @@ exports.getAllUsers = async (req, res) => {
         isOnline: status === 'friends' ? (u.isOnline || false) : false,
         lastSeen: status === 'friends' ? u.lastSeen : null,
         isPublicProfile: u.isPublicProfile || false,
+        isVerified: u.isVerified || false,
         status
       };
     });
