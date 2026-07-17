@@ -228,18 +228,8 @@ export default function DynamicProfilePage() {
               </div>
 
               <div>
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Basic Info & Relationship</h3>
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Basic Info</h3>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3.5 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
-                    <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center shrink-0 font-bold">❤️</div>
-                    <div>
-                      <p className="text-xs text-gray-400 font-semibold">Relationship Status</p>
-                      <p className="font-bold text-gray-900 text-sm capitalize">
-                        {user.relationshipStatus || <span className="text-gray-400 italic font-normal">Not specified</span>}
-                      </p>
-                    </div>
-                  </div>
-
                   <div className="flex items-center gap-3.5 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
                     <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center shrink-0 font-bold">🕒</div>
                     <div>
@@ -463,7 +453,6 @@ export default function DynamicProfilePage() {
               {user.education && <div className="flex items-center gap-2"><GraduationCap size={20} className="text-gray-500" /> Studied at {user.education}</div>}
               {user.location && <div className="flex items-center gap-2"><MapPin size={20} className="text-gray-500" /> Lives in {user.location}</div>}
               {user.hometown && <div className="flex items-center gap-2"><MapPin size={20} className="text-gray-500" /> From {user.hometown}</div>}
-              {user.relationshipStatus && <div className="flex items-center gap-2"><Heart size={20} className="text-gray-500" /> {user.relationshipStatus}</div>}
               <div className="flex items-center gap-2"><Clock size={20} className="text-gray-500" /> Joined {new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</div>
             </div>
           </div>
