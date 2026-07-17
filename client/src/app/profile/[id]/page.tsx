@@ -9,6 +9,7 @@ import Link from "next/link";
 import { API_URL } from "@/config/api";
 import toast, { Toaster } from "react-hot-toast";
 import { getDefaultAvatar } from "@/lib/utils";
+import VerifiedBadge from '@/components/common/VerifiedBadge';
 
 const formatViewCount = (count: number = 0) => {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace('.0', '')}M`;
@@ -534,7 +535,10 @@ export default function DynamicProfilePage() {
                 
                 <div className="text-center md:text-left mb-2 md:mb-4">
                   <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-                    <h1 className="text-[32px] font-bold text-black leading-tight">{fullName}</h1>
+                    <h1 className="text-[32px] font-bold text-black leading-tight flex items-center gap-2">
+                      {fullName}
+                      {(user?.isVerified || user?._id === '6a59dbe1d7d3d61365e278cb' || user?.id === '6a59dbe1d7d3d61365e278cb') && <VerifiedBadge className="w-8 h-8" />}
+                    </h1>
                     {user?.isPublicProfile && (
                       <span title="Public Profile" className="inline-flex items-center justify-center w-7 h-7 bg-gradient-to-r from-[#1877f2] to-[#0052cc] text-white text-base rounded-full shadow-md border border-white/40 cursor-pointer animate-in fade-in zoom-in-95">
                         🌐

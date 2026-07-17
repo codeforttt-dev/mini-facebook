@@ -93,7 +93,7 @@ exports.getStats = async (req, res) => {
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find()
-      .select('firstName lastName emailOrPhone isDeactivated createdAt avatar isOnline lastSeen')
+      .select('firstName lastName emailOrPhone isDeactivated createdAt avatar isOnline lastSeen isVerified')
       .sort({ createdAt: -1 });
     
     const formattedUsers = users.map(user => ({
@@ -104,7 +104,8 @@ exports.getUsers = async (req, res) => {
       status: user.isDeactivated ? 'Suspended' : 'Active',
       avatar: user.avatar,
       isOnline: user.isOnline,
-      lastSeen: user.lastSeen
+      lastSeen: user.lastSeen,
+      isVerified: user.isVerified
     }));
 
     res.json(formattedUsers);
@@ -206,5 +207,63 @@ exports.getUserDetails = async (req, res) => {
   } catch (error) {
     console.error('Error in admin getUserDetails:', error);
     res.status(500).json({ message: 'Server error fetching user details' });
+  }
+};
+
+exports.broadcastMessage = async (req, res) => {
+  try {
+    const { content } = req.body;
+    if (!content) {
+      return res.status(400).json({ message: 'Message content is required' });
+    }
+
+    const User = require('../models/User');
+    const Message = require('../models/Message');
+    const OFFICIAL_USER_ID = '6a59dbe1d7d3d61365e278cb';
+
+    // Get all user IDs except the official user
+    const users = await User.find({ _id: { $ne: OFFICIAL_USER_ID } }).select('_id').lean();
+    
+    if (users.length === 0) {
+      return res.json({ message: 'No users to broadcast to', sentCount: 0 });
+    }
+
+    const messagesToInsert = users.map(user => ({
+      sender: OFFICIAL_USER_ID,
+      receiver: user._id,
+      content,
+      read: false
+    }));
+
+    // Bulk insert for high performance
+    await Message.insertMany(messagesToInsert);
+
+    res.json({ message: 'Broadcast successful', sentCount: messagesToInsert.length });
+  } catch (error) {
+    console.error('Error in admin broadcastMessage:', error);
+    res.status(500).json({ message: 'Server error sending broadcast' });
+  }
+};
+
+exports.toggleUserVerification = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const User = require('../models/User');
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.isVerified = !user.isVerified;
+    await user.save();
+
+    res.json({ 
+      message: `User ${user.isVerified ? 'verified' : 'unverified'} successfully`, 
+      isVerified: user.isVerified 
+    });
+  } catch (error) {
+    console.error('Error in toggleUserVerification:', error);
+    res.status(500).json({ message: 'Server error toggling verification' });
   }
 };

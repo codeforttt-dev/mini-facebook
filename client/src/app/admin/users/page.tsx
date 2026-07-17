@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Search, Shield, UserCheck, Loader2, Filter, Eye, X, Mail, Phone, Calendar, MapPin, Users, MessageSquare, FileText, UserPlus } from 'lucide-react';
+import { Search, Shield, UserCheck, Loader2, Filter, Eye, X, Mail, Phone, Calendar, MapPin, Users, MessageSquare, FileText, UserPlus, Megaphone, Send, BadgeCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
+import VerifiedBadge from '@/components/common/VerifiedBadge';
 
 export default function UsersAdminPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -15,6 +16,11 @@ export default function UsersAdminPage() {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [userDetails, setUserDetails] = useState<any | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+
+  // Broadcast State
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+  const [broadcastMessage, setBroadcastMessage] = useState('');
+  const [isBroadcasting, setIsBroadcasting] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -63,6 +69,61 @@ export default function UsersAdminPage() {
     }
   };
 
+  const handleToggleVerification = async () => {
+    if (!userDetails) return;
+    try {
+      const adminPin = sessionStorage.getItem('admin_pin') || '';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+      const res = await fetch(`${apiUrl}/api/admin/users/${userDetails.user._id}/verify`, {
+        method: 'PUT',
+        headers: { 'x-admin-pin': adminPin }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message);
+        setUserDetails({ ...userDetails, user: { ...userDetails.user, isVerified: data.isVerified } });
+        setUsers(users.map(u => u.id === userDetails.user._id ? { ...u, isVerified: data.isVerified } : u));
+      } else {
+        toast.error(data.message || 'Failed to toggle verification');
+      }
+    } catch (error) {
+      toast.error('Network error during verification');
+    }
+  };
+
+  const handleBroadcast = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!broadcastMessage.trim()) return;
+    
+    setIsBroadcasting(true);
+    try {
+      const adminPin = sessionStorage.getItem('admin_pin') || '';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+      
+      const res = await fetch(`${apiUrl}/api/admin/broadcast`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-admin-pin': adminPin 
+        },
+        body: JSON.stringify({ content: broadcastMessage })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(`Message sent to ${data.sentCount} users!`);
+        setShowBroadcastModal(false);
+        setBroadcastMessage('');
+      } else {
+        toast.error(data.message || 'Broadcast failed');
+      }
+    } catch (error) {
+      toast.error('Network error during broadcast');
+    } finally {
+      setIsBroadcasting(false);
+    }
+  };
+
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           user.email.toLowerCase().includes(searchQuery.toLowerCase());
@@ -90,6 +151,14 @@ export default function UsersAdminPage() {
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Users</h1>
           <p className="text-xs text-gray-500 mt-0.5">Manage and view user accounts.</p>
         </div>
+        
+        <button 
+          onClick={() => setShowBroadcastModal(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm"
+        >
+          <Megaphone className="w-4 h-4" />
+          Broadcast Message
+        </button>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <div className="relative group flex-1 sm:flex-none">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
@@ -149,8 +218,11 @@ export default function UsersAdminPage() {
                           <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 border border-white rounded-full"></span>
                         )}
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-xs">{user.name}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-xs flex items-center gap-1">
+                          {user.name}
+                          {(user.isVerified || user.id === '6a59dbe1d7d3d61365e278cb') && <VerifiedBadge className="w-3 h-3" />}
+                        </p>
                         <p className="text-[10px] text-gray-400 truncate max-w-[120px] sm:max-w-xs">{user.email}</p>
                       </div>
                     </td>
@@ -226,13 +298,23 @@ export default function UsersAdminPage() {
                         {userDetails.user.firstName.charAt(0)}
                       </div>
                     )}
-                    <div>
-                      <h3 className="font-bold text-gray-900 text-sm">{userDetails.user.firstName} {userDetails.user.lastName}</h3>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-900 text-sm flex items-center gap-1">
+                        {userDetails.user.firstName} {userDetails.user.lastName}
+                        {(userDetails.user.isVerified || userDetails.user._id === '6a59dbe1d7d3d61365e278cb') && <VerifiedBadge />}
+                      </h3>
                       <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
                         {userDetails.user.emailOrPhone.includes('@') ? <Mail className="w-3 h-3" /> : <Phone className="w-3 h-3" />}
                         {userDetails.user.emailOrPhone}
                       </div>
                     </div>
+                    <button
+                      onClick={handleToggleVerification}
+                      title={userDetails.user.isVerified ? "Remove Verification" : "Verify Profile"}
+                      className={`p-2 rounded-full border transition-colors ${userDetails.user.isVerified ? 'bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100' : 'bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100 hover:text-blue-500'}`}
+                    >
+                      <BadgeCheck className="w-5 h-5" />
+                    </button>
                   </div>
 
                   {/* Profile Info */}
@@ -285,6 +367,56 @@ export default function UsersAdminPage() {
                 <div className="text-center text-xs text-rose-500 py-4">Failed to load details</div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Broadcast Modal */}
+      {showBroadcastModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95">
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-600">
+              <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                <Megaphone className="w-4 h-4" />
+                Global Broadcast
+              </h2>
+              <button onClick={() => setShowBroadcastModal(false)} className="p-1 text-blue-100 hover:bg-white/20 rounded-md transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleBroadcast} className="p-4 bg-gray-50/50">
+              <p className="text-xs text-gray-500 mb-3">
+                This message will be sent as a Direct Message to <strong>ALL users</strong> on the platform from the official Admin account.
+              </p>
+              
+              <textarea
+                value={broadcastMessage}
+                onChange={(e) => setBroadcastMessage(e.target.value)}
+                placeholder="Type your message here..."
+                className="w-full h-32 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none mb-4"
+                required
+              />
+              
+              <div className="flex justify-end gap-2">
+                <button 
+                  type="button" 
+                  onClick={() => setShowBroadcastModal(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+                  disabled={isBroadcasting}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={isBroadcasting || !broadcastMessage.trim()}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {isBroadcasting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  {isBroadcasting ? 'Sending...' : 'Send to All Users'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

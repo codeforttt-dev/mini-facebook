@@ -72,6 +72,8 @@ router.get('/admin/stats', adminAuthMiddleware, adminController.getStats);
 router.get('/admin/users', adminAuthMiddleware, adminController.getUsers);
 router.get('/admin/posts', adminAuthMiddleware, adminController.getPosts);
 router.get('/admin/users/:userId', adminAuthMiddleware, adminController.getUserDetails);
+router.put('/admin/users/:userId/verify', adminAuthMiddleware, adminController.toggleUserVerification);
 router.delete('/admin/posts/:postId', adminAuthMiddleware, adminController.deletePost);
+router.post('/admin/broadcast', adminAuthMiddleware, adminController.broadcastMessage);
 
 module.exports = router;

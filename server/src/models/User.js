@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
   isPublicProfile: { type: Boolean, default: false },
   blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isDeactivated: { type: Boolean, default: false },
-  deactivatedUntil: { type: Date }
+  deactivatedUntil: { type: Date },
+  isVerified: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

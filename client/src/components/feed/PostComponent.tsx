@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { MoreHorizontal, ThumbsUp, MessageCircle, Share2, Send, Pencil, Trash2, X, Check } from 'lucide-react';
+import { MoreHorizontal, ThumbsUp, MessageCircle, Share2, Send, Pencil, Trash2, X, Check, BadgeCheck } from 'lucide-react';
 import ShareModal from './ShareModal';
 import { API_URL } from '@/config/api';
 import { getDefaultAvatar } from "@/lib/utils";
+import VerifiedBadge from '@/components/common/VerifiedBadge';
 
 interface PostProps {
   post: any;
@@ -406,8 +407,9 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
           </Link>
           <div>
             <Link href={`/profile/${post.user._id}`}>
-              <h3 className="font-semibold text-[15px] text-black hover:underline cursor-pointer">
+              <h3 className="font-semibold text-[15px] text-black hover:underline cursor-pointer flex items-center gap-1">
                 {post.user.firstName} {post.user.lastName}
+                {(post.user.isVerified || post.user._id === '6a59dbe1d7d3d61365e278cb' || post.user.id === '6a59dbe1d7d3d61365e278cb') && <VerifiedBadge />}
               </h3>
             </Link>
             <p className="text-[13px] text-[#65676B] flex items-center gap-1">

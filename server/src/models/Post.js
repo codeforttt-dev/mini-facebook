@@ -41,11 +41,16 @@ const postSchema = new mongoose.Schema({
   editedAt: {
     type: Date,
     default: null
+  },
+  isOfficial: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 
 // Indexes for fast fetching
-postSchema.index({ createdAt: -1 }); // Global feed
+postSchema.index({ isOfficial: -1, createdAt: -1 }); // Global feed prioritizes official posts
+postSchema.index({ createdAt: -1 }); // Global feed backup
 postSchema.index({ user: 1, createdAt: -1 }); // Profile feed
 postSchema.index({ mediaType: 1, createdAt: -1 }); // Reels feed - fast filter by mediaType
 postSchema.index({ video: 1 }); // Reels feed - fast filter by video field

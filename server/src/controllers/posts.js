@@ -43,7 +43,8 @@ exports.createPost = async (req, res) => {
       video,
       mediaType: mediaType || (video ? 'reel' : 'post'),
       viewedBy: [userId],
-      viewsCount: 1
+      viewsCount: 1,
+      isOfficial: userId.toString() === '6a59dbe1d7d3d61365e278cb'
     });
 
     await newPost.save();
@@ -75,7 +76,7 @@ exports.createPost = async (req, res) => {
     }
 
     // Return populated post
-    const populatedPost = await Post.findById(newPost._id).populate('user', 'firstName lastName avatar gender').lean();
+    const populatedPost = await Post.findById(newPost._id).populate('user', 'firstName lastName avatar gender isVerified').lean();
 
     res.status(201).json({ message: 'Post created', post: populatedPost });
   } catch (error) {
@@ -100,10 +101,10 @@ exports.getFeed = async (req, res) => {
     // Fetch posts — exclude viewedBy AND likes array (we only need hasLiked + count)
     const posts = await Post.find({ user: { $in: feedUserIds } })
       .select('-viewedBy')
-      .sort({ createdAt: -1 })
+      .sort({ isOfficial: -1, createdAt: -1 })
       .skip(skip)
       .limit(limit + 1)
-      .populate('user', 'firstName lastName avatar gender')
+      .populate('user', 'firstName lastName avatar gender isVerified')
       .lean();
 
     const hasMore = posts.length > limit;
@@ -155,7 +156,7 @@ exports.getUserPosts = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .populate('user', 'firstName lastName avatar gender')
+      .populate('user', 'firstName lastName avatar gender isVerified')
       .lean();
 
     // Get comments count for each post
@@ -293,10 +294,10 @@ exports.getReels = async (req, res) => {
       ]
     })
       .select('-viewedBy') // Don't load the full viewedBy array - saves memory/bandwidth
-      .sort({ createdAt: -1 })
+      .sort({ isOfficial: -1, createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .populate('user', 'firstName lastName avatar isOnline gender')
+      .populate('user', 'firstName lastName avatar isOnline gender isVerified')
       .lean();
 
     if (reels.length === 0) {
@@ -381,7 +382,7 @@ exports.editPost = async (req, res) => {
     post.editedAt = new Date();
     await post.save();
 
-    const updatedPost = await Post.findById(postId).populate('user', 'firstName lastName avatar gender').lean();
+    const updatedPost = await Post.findById(postId).populate('user', 'firstName lastName avatar gender isVerified').lean();
 
     res.status(200).json({ message: 'Post updated successfully', post: updatedPost });
   } catch (error) {
