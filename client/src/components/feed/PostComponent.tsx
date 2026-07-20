@@ -476,7 +476,7 @@ export default function PostComponent({ post: initialPost, currentUser, isProfil
       )}
       {post.imageSkipped && (
         <div className="rounded-lg border border-gray-200 -mx-4 mb-3 bg-gray-50 px-4 py-6 text-center text-sm text-gray-500">
-          Large photo feed fast rakhne ke liye yahan skip ki gayi hai. Profile par post open karke dekh sakte ho.
+          Large photo skipped to keep the feed fast. Open the post on the profile to view it.
         </div>
       )}
 
